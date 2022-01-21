@@ -1,6 +1,7 @@
 package com.ssafy.auth.controller;
 
 import com.ssafy.auth.dto.SignupDto;
+import com.ssafy.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

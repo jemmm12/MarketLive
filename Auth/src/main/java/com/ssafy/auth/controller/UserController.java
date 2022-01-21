@@ -1,7 +1,11 @@
 package com.ssafy.auth.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ssafy.auth.dto.LoginDto;
 import com.ssafy.auth.dto.SignupDto;
+import com.ssafy.auth.dto.UpdateDto;
+import com.ssafy.auth.dto.UserPageDto;
 import com.ssafy.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -16,37 +20,72 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/signup")
+    @PostMapping("/signup") // 회원가입
     public ResponseEntity<String> signupUser(@RequestBody SignupDto signupDto) {
         try{
             userService.saveUser(signupDto);
         }
         catch (Exception e) {
-            return new ResponseEntity<>("회원가입에 실패했습니다.", HttpStatus.CREATED);
+            return new ResponseEntity<>("회원가입에 실패했습니다.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("회원가입에 성공했습니다.", HttpStatus.CREATED);
     }
 
-    @PostMapping("/signin")
+    @PostMapping("/signin") // 로그인
     public ResponseEntity<String> signinUser(@RequestBody LoginDto loginDto){
         HttpHeaders responseHttpHeaders = new HttpHeaders();
         responseHttpHeaders.set("Authorization", "Bearer " + userService.loginUser(loginDto));
-
         if(userService.loginUser(loginDto) == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("아이디 또는 비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
-
         return new ResponseEntity<>(userService.loginUser(loginDto), responseHttpHeaders, HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/{email}")
-    public ResponseEntity<Void> deleteUser(@PathVariable(name = "email") String email) {
+    @GetMapping(path = "/checkemail") // 이메일 중복체크
+    public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
         try {
-            userService.deleteUser(email);
+            if(userService.isduplicatedEmail(email)) return new ResponseEntity<>( false, HttpStatus.CONFLICT);
+            else return new ResponseEntity<>(true, HttpStatus.OK);
         }
-        catch (Exception e){
+        catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping(path = "/checknickname") // 닉네임 중복체크
+    public ResponseEntity<Boolean> checkNickname(@RequestParam String nickname) {
+        try {
+            if(userService.isduplicatedNickname(nickname)) return new ResponseEntity<>( false, HttpStatus.CONFLICT);
+            else return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/search") // 유저찾기
+    public ResponseEntity<UserPageDto> searchUser(@RequestParam String nickname) {
+        UserPageDto userPageDto = userService.browseUser(nickname);
+        if(userPageDto != null) return new ResponseEntity<>(userPageDto, HttpStatus.OK);
+        else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping("/delete") // 회원탈퇴
+    public ResponseEntity<Void> signoutUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String bearerToken) {
+        String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
+        DecodedJWT decodedJWT = JWT.decode(token); //디코딩
+        Long userid = Long.parseLong(decodedJWT.getSubject()); //이름 뽑아오기
+        try{
+            userService.deleteUser(userid, token);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/update") // 정보수정
+    public ResponseEntity<String> updateUser(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken, @RequestBody UpdateDto updateDto ) {
+        return null;
     }
 }
