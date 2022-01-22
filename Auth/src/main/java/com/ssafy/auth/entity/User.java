@@ -14,8 +14,8 @@ import java.util.Set;
 public class User {
     @Id
     @Column(name = "USER_ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long userid;
 
     @Column(name = "USER_EMAIL", unique = true)
     private String email;

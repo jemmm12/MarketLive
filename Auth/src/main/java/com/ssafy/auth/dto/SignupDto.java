@@ -14,15 +14,4 @@ public class SignupDto {
     private String phone;
     private String name;
     private String nickname;
-    public User toEntity(){
-        Set<Authority> authorities = new HashSet<>();
-        authorities.add(Authority.USER);
-        return User.builder()
-                .name(name)
-                .password(password)
-                .phone(phone)
-                .email(email)
-                .authority(authorities)
-                .build();
-    }
 }

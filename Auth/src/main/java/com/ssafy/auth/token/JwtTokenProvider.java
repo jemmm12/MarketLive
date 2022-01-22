@@ -84,7 +84,7 @@ public class JwtTokenProvider {
     public boolean vaildateToken(String jwtToken) throws Exception{
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            return !claims.getBody().getExpiration().before(new Date()); // 만료가 된 경우 false 리턴
+            return !claims.getBody().getExpiration().before(new Date()); // 만료 또는 변조가 된 경우 false 리턴
         } catch (Exception e) {
             throw new Exception();
         }

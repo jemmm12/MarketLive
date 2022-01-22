@@ -71,21 +71,30 @@ public class UserController {
     }
 
     @DeleteMapping("/delete") // 회원탈퇴
-    public ResponseEntity<Void> signoutUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String bearerToken) {
+    public ResponseEntity<String> signoutUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String bearerToken) {
         String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
         DecodedJWT decodedJWT = JWT.decode(token); //디코딩
-        Long userid = Long.parseLong(decodedJWT.getSubject()); //이름 뽑아오기
+        Long userid = Long.parseLong(decodedJWT.getSubject()); //pk 뽑아오기
         try{
             userService.deleteUser(userid, token);
         }
         catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("로그인 유효 시간이 지났습니다.", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("회원탈퇴 완료.", HttpStatus.OK);
     }
 
     @PostMapping("/update") // 정보수정
     public ResponseEntity<String> updateUser(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken, @RequestBody UpdateDto updateDto ) {
-        return null;
+        String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
+        DecodedJWT decodedJWT = JWT.decode(token); //디코딩
+        Long userid = Long.parseLong(decodedJWT.getSubject()); //pk 뽑아오기
+        try{
+            userService.updateUser(userid, token, updateDto);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("로그인 유효 시간이 지났습니다.", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("회원수정 완료.", HttpStatus.OK);
     }
 }

@@ -10,7 +10,7 @@ public interface UserService {
     String loginUser(LoginDto loginDto);
     UserPageDto browseUser(String nickname);
     void deleteUser(Long userid, String token) throws Exception;
-    String updateUser(UpdateDto updateDto);
+    void updateUser(Long userid, String token, UpdateDto updateDto) throws Exception;
     boolean isduplicatedEmail(String email);
     boolean isduplicatedNickname(String nickname);
 }
