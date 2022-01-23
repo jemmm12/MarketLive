@@ -1,11 +1,6 @@
 package com.ssafy.auth.dto;
 
-import com.ssafy.auth.entity.Authority;
-import com.ssafy.auth.entity.User;
 import lombok.Data;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 public class SignupDto {

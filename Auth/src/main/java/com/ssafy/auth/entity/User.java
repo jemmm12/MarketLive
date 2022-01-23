@@ -13,7 +13,7 @@ import java.util.Set;
 @Table(name = "USER")
 public class User {
     @Id
-    @Column(name = "USER_ID")
+    @Column(name = "USER_ID") // 단방향 설정 시 확인 필요
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userid;
 
