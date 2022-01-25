@@ -71,12 +71,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public MyPageDto mypageUser(String token) throws Exception {
-        MyPageDto myPageDto = new MyPageDto();
+        MyPageDto myPageDto = null;
         if(jwtTokenProvider.vaildateToken(token)) {
             DecodedJWT decodedJWT = JWT.decode(token); //디코딩
             Long userid = Long.parseLong(decodedJWT.getSubject()); //pk 뽑아오기
             User user = userRepository.findByUserid(userid).get();
-            myPageDto.builder()
+            myPageDto = new MyPageDto().builder()
                      .userid(user.getUserid())
                      .email(user.getEmail())
                      .phone(user.getPhone())
