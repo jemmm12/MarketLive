@@ -3,6 +3,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../../modules/member";
 import { useNavigate } from "react-router-dom";
+import SetAuth from "./SetAuth";
 
 function Login() {
   const dispatch = useDispatch();
@@ -30,15 +31,10 @@ function Login() {
     axios
       .post("/user/signin", data)
       .then((response) => {
-        const { accessToken } = response.data;
-        axios.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${accessToken}`;
         const token = response.data;
-        console.log(token);
-        // jwt 저장 테스트
-        localStorage.setItem('jwt',token)
-        //
+        localStorage.setItem("jwt", token);
+        localStorage.setItem("isLogin", true);
+        SetAuth(token);
         loginSuccess();
         navigate("/");
       })
