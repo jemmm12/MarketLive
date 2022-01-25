@@ -79,11 +79,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(Long userid, String token, UpdateDto updateDto) throws Exception {
+    public void updateUser(Long userid, String token, UpdateDto updateDto) throws Exception { // 프론트에서 변경안해도 기본값 불러주기
         if(jwtTokenProvider.vaildateToken(token)) {
             User user = userRepository.findByUserid(userid).get();
             user.setNickname(updateDto.getNickname());
             user.setOneline(updateDto.getOneline());
+            user.setPhone(updateDto.getPhone());
             userRepository.save(user);
         }
     }
