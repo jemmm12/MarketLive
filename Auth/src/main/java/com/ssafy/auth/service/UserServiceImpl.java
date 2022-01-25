@@ -1,9 +1,8 @@
 package com.ssafy.auth.service;
 
-import com.ssafy.auth.dto.LoginDto;
-import com.ssafy.auth.dto.SignupDto;
-import com.ssafy.auth.dto.UpdateDto;
-import com.ssafy.auth.dto.UserPageDto;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.ssafy.auth.dto.*;
 import com.ssafy.auth.entity.Authority;
 import com.ssafy.auth.entity.User;
 import com.ssafy.auth.repository.UserRepository;
@@ -68,6 +67,27 @@ public class UserServiceImpl implements UserService {
                                 .nickname(user.getNickname())
                                 .oneline(user.getOneline())
                                 .build();
+    }
+
+    @Override
+    public MyPageDto mypageUser(String token) throws Exception {
+        MyPageDto myPageDto = new MyPageDto();
+        if(jwtTokenProvider.vaildateToken(token)) {
+            DecodedJWT decodedJWT = JWT.decode(token); //디코딩
+            Long userid = Long.parseLong(decodedJWT.getSubject()); //pk 뽑아오기
+            User user = userRepository.findByUserid(userid).get();
+            myPageDto.builder()
+                     .userid(user.getUserid())
+                     .email(user.getEmail())
+                     .phone(user.getPhone())
+                     .manner(user.getManner())
+                     .name(user.getName())
+                     .nickname(user.getNickname())
+                     .thumnailroot(user.getThumnailroot())
+                     .oneline(user.getOneline())
+                     .build();
+        }
+        return myPageDto;
     }
 
     @Override

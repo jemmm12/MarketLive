@@ -2,10 +2,7 @@ package com.ssafy.auth.controller;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.ssafy.auth.dto.LoginDto;
-import com.ssafy.auth.dto.SignupDto;
-import com.ssafy.auth.dto.UpdateDto;
-import com.ssafy.auth.dto.UserPageDto;
+import com.ssafy.auth.dto.*;
 import com.ssafy.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -96,5 +93,18 @@ public class UserController {
             return new ResponseEntity<>("로그인 유효 시간이 지났습니다.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("회원수정 완료.", HttpStatus.OK);
+    }
+
+    @GetMapping("/mypage") // 마이페이지
+    public ResponseEntity<MyPageDto> mypageUser(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken) {
+        String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
+        MyPageDto myPageDto;
+        try{
+            myPageDto = userService.mypageUser(token);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(myPageDto, HttpStatus.OK);
     }
 }
