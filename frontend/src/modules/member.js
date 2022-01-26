@@ -2,7 +2,7 @@ const SET_USER = "member/SET_USER";
 const LOGIN = "member/LOGIN";
 const LOGOUT = "member/LOGOUT";
 
-export const setUser = () => ({ type: SET_USER });
+export const setUser = (data) => ({ type: SET_USER }, data);
 export const login = () => ({ type: LOGIN });
 export const logout = () => ({ type: LOGOUT });
 
