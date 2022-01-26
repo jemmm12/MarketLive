@@ -18,7 +18,8 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_id;
+    @Column(name = "user_id")
+    private Long userId;
 
     private String user_email;
     private String user_password;
@@ -33,19 +34,17 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "senderId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference(value = "dmEntityList")
-//    @JsonManagedReference(value = "dmEntityList")
     List<DmEntity> dmEntitySendList = new ArrayList<>();
 
 
 
     @OneToMany(mappedBy = "receiverId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference(value = "dmEntityList1")
-//    @JsonManagedReference(value = "dmEntityList1")
     List<DmEntity> dmEntityReceiverList = new ArrayList<>();
 
     @Builder
-    public UserEntity(Long user_id, String user_email, String user_password, String user_phone, double user_manner, String user_name, String user_nickname, String user_thumbnail_root, String user_one_line) {
-        this.user_id = user_id;
+    public UserEntity(Long userId, String user_email, String user_password, String user_phone, double user_manner, String user_name, String user_nickname, String user_thumbnail_root, String user_one_line) {
+        this.userId = userId;
         this.user_email = user_email;
         this.user_password = user_password;
         this.user_phone = user_phone;
