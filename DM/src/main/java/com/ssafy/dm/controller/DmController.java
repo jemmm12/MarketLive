@@ -69,4 +69,10 @@ public class DmController {
         return new ResponseEntity<>("메세지 삭제 완료", HttpStatus.OK);
 
     }
+
+    @PatchMapping("/read/{dmId}") // 메세지 읽음
+    public ResponseEntity<DmEntity> updateDm (@RequestBody DmDto dmDto, @PathVariable("dmId") Long dmId) {
+        return ResponseEntity.ok(dmService.updateDm(dmId, dmDto));
+    }
+
 }

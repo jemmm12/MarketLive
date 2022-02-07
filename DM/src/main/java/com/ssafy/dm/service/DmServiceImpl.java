@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,5 +62,19 @@ public class DmServiceImpl implements DmService{
             return 1;
         }
         return 0;
+    }
+
+    @Override
+    @Transactional
+    public DmEntity updateDm (Long id, DmDto dmDto) {
+        Optional<DmEntity> optionalMember = dmRepository.findById(id);
+        if (!optionalMember.isPresent()) {
+            throw new EntityNotFoundException(
+                    "Member not present in the database");
+        }
+        DmEntity dm = optionalMember.get();
+        dm.setDm_read(dmDto.getDm_read());
+
+        return dmRepository.save(dm);
     }
 }

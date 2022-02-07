@@ -5,14 +5,17 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.Id;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
+@DynamicInsert
 @Table(name = "dm")
 public class DmEntity {
 
@@ -33,13 +36,18 @@ public class DmEntity {
     @JoinColumn(name = "receiver_id", referencedColumnName = "user_id")
     private UserEntity receiverId; // 수신자
 
+    @Column(columnDefinition = "boolean default false")
     private Boolean dm_read; // 수신여부
-    private String dm_time; // 도착 시간
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Date dm_time; // 도착 시간
+
     private String dm_title; // 제목
     private String dm_msg; // 내용
 
     @Builder
-    public DmEntity(Long dm_id, UserEntity senderId, UserEntity receiverId, Boolean dm_read, String dm_time, String dm_title, String dm_msg) {
+    public DmEntity(Long dm_id, UserEntity senderId, UserEntity receiverId, Boolean dm_read, Date dm_time, String dm_title, String dm_msg) {
         this.dm_id = dm_id;
         this.senderId = senderId;
         this.receiverId = receiverId;

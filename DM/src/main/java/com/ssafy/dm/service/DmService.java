@@ -11,5 +11,6 @@ public interface DmService {
     List<DmEntity> findAllDm(Long receiver_id); // 쪽지함 리스트
     DmEntity sendDm(DmDto dmDto); // 메세지 보내기
     int deleteDm(Long id); // 메세지 삭제
+    DmEntity updateDm(Long id, DmDto dmDto);
 
 }
