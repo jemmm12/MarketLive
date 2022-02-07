@@ -1,11 +1,11 @@
 FROM node:12.2.0-alpine
 
-RUN npm install -g serve
-
 RUN mkdir /app
 WORKDIR /app
 
-RUN mkdir ./build
-COPY ./build ./build
+ENV PATH /app/node_modules/.bin:$PATH
 
-ENTRYPOINT ["serve", "-s", "build"]
+COPY package.json /app/package.json
+RUN npm install -g
+
+CMD ["npm", "start"]
