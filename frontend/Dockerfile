@@ -1,11 +1,11 @@
 FROM node:12.2.0-alpine
 
+RUN npm install -g serve
+
+RUN mkdir /app
 WORKDIR /app
 
-ENV PATH /app/node_modules/.bin:$PATH
+RUN mkdir ./build
+COPY ./build ./build
 
-COPY package.json /app/package.json
-RUN npm install 
-RUN npm install react-scripts@5.0.0 -g
-
-CMD ["npm", "start"]
+ENTRYPOINT ["serve", "-s", "build"]
