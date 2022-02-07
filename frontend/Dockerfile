@@ -9,4 +9,4 @@ COPY package.json /app/package.json
 RUN npm install -g
 RUN npm install react-scripts@5.0.0 -g
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "build"]
