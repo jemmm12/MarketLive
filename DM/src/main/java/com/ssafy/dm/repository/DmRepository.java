@@ -9,6 +9,5 @@ import java.util.List;
 
 @Repository
 public interface DmRepository extends JpaRepository<DmEntity, Long> {
-    List<DmEntity> findAllByReceiverId(@Param("id")  Long id);
-    DmEntity findDmEntityByReceiverId(Long id);
+    List<DmEntity> findByReceiverIdUserId(Long id);
 }

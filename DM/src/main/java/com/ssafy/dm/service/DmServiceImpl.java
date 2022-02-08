@@ -5,58 +5,36 @@ import com.ssafy.dm.entity.DmEntity;
 import com.ssafy.dm.entity.UserEntity;
 import com.ssafy.dm.repository.DmRepository;
 import com.ssafy.dm.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class DmServiceImpl implements DmService{
 
-    @Autowired
-    DmRepository dmRepository;
-
-    @Autowired
-    UserRepository userRepository;
+    private final DmRepository dmRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public Optional<DmEntity> findDm(Long id) {
+    public DmEntity findDm(Long id) {
         Optional<DmEntity> dmEntity = dmRepository.findById(id);
-        return Optional.of(dmEntity.get());
+        return dmEntity.get();
     }
 
     @Override
     public List<DmEntity> findAllDm(Long id) {
 
-        List<DmEntity> list = new ArrayList<>();
-        List<DmEntity> list2 = new ArrayList<>();
+        List<DmEntity> list = dmRepository.findByReceiverIdUserId(id);
 
-        dmRepository.findAll().forEach(e -> list.add(e));
-
-        int i = 0;
-        while(i < list.size()) {
-
-//            System.out.println(list.get(i).getReceiverId().getUser_id());
-//            System.out.println(list.get(i).toString());
-            if(list.get(i).getReceiverId().getUser_id() == null) {
-                i = i+1;
-                continue;
-            }
-            else if(list.get(i).getReceiverId().getUser_id().equals(id)) {
-                list2.add(list.get(i));
-                i = i+1;
-            }
-            else {
-                i = i+1;
-                continue;
-            }
-        }
-        return list2;
+        return list;
     }
 
 
@@ -84,5 +62,19 @@ public class DmServiceImpl implements DmService{
             return 1;
         }
         return 0;
+    }
+
+    @Override
+    @Transactional
+    public DmEntity updateDm (Long id, DmDto dmDto) {
+        Optional<DmEntity> optionalMember = dmRepository.findById(id);
+        if (!optionalMember.isPresent()) {
+            throw new EntityNotFoundException(
+                    "Member not present in the database");
+        }
+        DmEntity dm = optionalMember.get();
+        dm.setDm_read(dmDto.getDm_read());
+
+        return dmRepository.save(dm);
     }
 }
