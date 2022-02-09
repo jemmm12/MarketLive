@@ -1,9 +1,10 @@
 package com.ssafy.rtc.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.ssafy.rtc.dto.RoomDto;
 
-@RequiredArgsConstructor
-@Service
-public class ViewerService {
+public interface ViewerService {
+
+    RoomDto enterRoom(String broad_userid, String viewer_userid);
+    void exitRoom(String broad_userid, String viewer_userid);
+
 }
