@@ -21,6 +21,7 @@ public class UserEntity {
     @Column(name = "user_id")
     private Long userId;
 
+    @Column(name = "USER_EMAIL", unique = true)
     private String user_email;
     private String user_password;
 
@@ -31,12 +32,9 @@ public class UserEntity {
     private String user_thumbnail_root;
     private String user_one_line;
 
-
     @OneToMany(mappedBy = "senderId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference(value = "dmEntityList")
     List<DmEntity> dmEntitySendList = new ArrayList<>();
-
-
 
     @OneToMany(mappedBy = "receiverId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference(value = "dmEntityList1")
