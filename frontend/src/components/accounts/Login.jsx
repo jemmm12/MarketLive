@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import SetAuth from "./SetAuth";
 import jwt_decode from "jwt-decode";
 import { Form, Button, Col, Row, Container } from "react-bootstrap";
+import { useEffect } from "react";
 
 function Login() {
   const dispatch = useDispatch();
@@ -46,7 +47,7 @@ function Login() {
       .then((response) => {
         const token = response.data;
         localStorage.setItem("jwt", token);
-        localStorage.setItem("isLogin", true);
+        // localStorage.setItem("isLogin", true);
         SetAuth(token);
         const decoded = jwt_decode(token);
         console.log(decoded);
@@ -80,6 +81,13 @@ function Login() {
       });
   };
 
+  // 로그인 되어있으면 홈으로 이동
+  useEffect(() => {
+    if(localStorage.jwt){
+      navigate("/")
+    }
+  },[])
+
   return (
     // <div>
     //   <input
@@ -102,7 +110,7 @@ function Login() {
     <Container fluid="sm">
       <Form>
         <Form.Group as={Row} className="mt-5 justify-content-center">
-          <Col sm={4}>
+          <Col xs={10} sm={8} lg={6} xl={4}>
             <Form.Control
               className="mb-1"
               type="email"
@@ -121,7 +129,7 @@ function Login() {
               onKeyPress={onKeyPress}
             ></Form.Control>
             <div className="d-grid gap-2">
-              <Button onClick={onClick}>로그인</Button>
+              <Button onClick={onClick} variant="secondary">로그인</Button>
             </div>
           </Col>
         </Form.Group>

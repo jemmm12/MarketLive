@@ -29,6 +29,9 @@ function MyPage() {
         })
         .catch(err => {
             console.log(err)
+            // 토큰 만료되면 로그아웃
+            localStorage.removeItem("jwt");
+            navigate("/login");
         })
     }, [])
 
@@ -37,6 +40,12 @@ function MyPage() {
         navigate('/mypageedit')
     }
 
+    const onClickLogout = () => {
+        localStorage.removeItem("jwt");
+        navigate("/");
+    }
+
+    
     if (inputs.email === ''){
         return(
             <div className="d-flex">
@@ -109,13 +118,22 @@ function MyPage() {
                     <h5>{inputs.oneline}</h5>
                 </div>
                 <hr />
-                <Button 
-                    className='d-flex ms-auto' 
-                    variant="light"
-                    onClick={onMyPageEdit}
-                >
-                    수정
-                </Button>
+                <div className='d-flex' >
+                    <Button 
+                        className='ms-auto' 
+                        variant="secondary"
+                        onClick={onMyPageEdit}
+                    >
+                        수정
+                    </Button>
+                    <Button 
+                        className='ms-2' 
+                        variant="secondary"
+                        onClick={onClickLogout}
+                    >
+                        로그아웃
+                    </Button>
+                </div>
             </div>
         </div>
     )

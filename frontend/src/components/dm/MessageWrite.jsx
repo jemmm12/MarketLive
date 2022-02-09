@@ -42,6 +42,9 @@ function MessageWrite() {
         })
         .catch(err => {
             console.log(err)
+            // 토큰 만료되면 로그아웃
+            localStorage.removeItem("jwt");
+            navigate("/login");
         })
     }, [])
 
@@ -76,7 +79,7 @@ function MessageWrite() {
         if (checkNickname) {
             axios({     // 쪽지 보내기
                 method: 'post',
-                url: '/dm/creat',
+                url: '/dm/create',
                 data: {
                     "receiverId": receiverId,
                     "senderId": senderId,
@@ -98,7 +101,7 @@ function MessageWrite() {
     }
 
     return(
-        <div className="d-flex">
+        <div className="d-sm-flex">
             <MessageSideBar></MessageSideBar>
             {/* <div className="mt-3 ms-3 border border-dark p-3">
                 <div className="mb-2">
@@ -132,7 +135,7 @@ function MessageWrite() {
                     <button onClick={onSend}>보내기</button>
                 </div>
             </div> */}
-            <Form style={{ width: '70%' }} className="mx-auto border p-2 mt-5">
+            <Form style={{ width: '70%' }} className="mx-auto border p-2 mt-4">
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>받는 사람</Form.Label>
                     <Form.Control 
@@ -167,12 +170,12 @@ function MessageWrite() {
                     />
                 </Form.Group>
                 <Button 
-                    variant="light"
+                    variant="secondary"
                     onClick={onSend}
                     className="d-flex ms-auto"
                 >보내기</Button>
             </Form>
-            <div className="ms-auto"></div>
+            <div className="ms-auto d-none d-sm-block"></div>
         </div>
     )
 }
