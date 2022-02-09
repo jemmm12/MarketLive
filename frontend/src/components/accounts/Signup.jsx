@@ -152,6 +152,13 @@ function Signup() {
     }
   };
 
+  // 로그인 되어있으면 홈으로 이동
+  useEffect(() => {
+    if(localStorage.jwt){
+      navigate("/")
+    }
+  },[])
+
   return (
     // <div>
     //     <h1>Signup</h1>
@@ -224,7 +231,7 @@ function Signup() {
     <Container fluid="sm">
       <Form>
         <Form.Group as={Row} className="mt-5 justify-content-center">
-          <Col sm={4}>
+          <Col xs={10} sm={8} lg={6} xl={4}>
             <Form.Control
               className="mb-1"
               type="email"
@@ -281,7 +288,7 @@ function Signup() {
               maxLength={15}
             ></Form.Control>
             <div className="d-grid gap-2">
-              <Button onClick={onSignup}>회원가입</Button>
+              <Button onClick={onSignup} variant="secondary">회원가입</Button>
             </div>
           </Col>
         </Form.Group>

@@ -1,10 +1,11 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import MessageSideBar from './MessageSideBar';
 import { Spinner, Table } from 'react-bootstrap'
 
 function Message() {
+    const navigate = useNavigate();
 
     const [myId, setMyId] = useState('')
     const [msgs, setMsgs] = useState('')
@@ -23,6 +24,9 @@ function Message() {
         })
         .catch(err => {
             console.log(err)
+            // 토큰 만료되면 로그아웃
+            localStorage.removeItem("jwt");
+            navigate("/login");
         })
     }, [])
 
@@ -48,16 +52,17 @@ function Message() {
     // axios에서 데이터를 받아오기 전에 key값 오류 방지
     if (msgs === ''){
         return(
-            <div className="d-flex">
+            <div className="d-sm-flex">
                 <MessageSideBar></MessageSideBar>
-                <Spinner animation="border" className="mt-5 mx-auto" />
+                <Spinner animation="border" className="mt-5 mx-auto d-none d-sm-block"/>
+                <Spinner animation="border" className='d-sm-none mt-5 d-flex mx-auto' />
             </div>
         )
     }
 
 
     return(
-        <div className="d-flex">
+        <div className="d-sm-flex">
             <MessageSideBar></MessageSideBar>
 
             {/* <table style={{border: '1px solid #444444', width: '70%'}}>
@@ -84,9 +89,8 @@ function Message() {
                     ))}
                 </tbody>
             </table> */}
-
-
-            <Table style={{ width: '70%' }} className="mx-auto mt-5">
+        
+            <Table style={{ width: '70%' }} className="mx-auto mt-4">
                 <thead>
                     <tr>
                     <th style={{ width: '40%' }}>제목</th>
@@ -98,28 +102,49 @@ function Message() {
                     {msgs.map((msg) => (
                         <tr key={msg.dm_id}>
                             <td>
-                                <Link 
+                                {msg.dm_read ?(
+                                    <Link 
                                     className='text-dark'
                                     style={{ textDecoration: 'none' }}
-                                    to={`/message/read/${msg.dm_id}`}
-                                >
-                                    {msg.dm_title}
-                                </Link>
+                                    to={`/messageread/${msg.dm_id}`}
+                                    >
+                                        {msg.dm_title}
+                                    </Link>
+                                ) : (
+                                    <Link 
+                                    className='text-dark fw-bold'
+                                    style={{ textDecoration: 'none' }}
+                                    to={`/messageread/${msg.dm_id}`}
+                                    >
+                                        {msg.dm_title}
+                                    </Link>
+                                )}
                             </td>
                             <td>
-                                <Link 
+                                {msg.dm_read ?(
+                                    <Link 
                                     className='text-dark'
                                     style={{ textDecoration: 'none' }}
-                                    to={`/profile/${msg.senderId.user_nickname}`}>
-                                    {msg.senderId.user_nickname}
-                                </Link> 
+                                    to={`/profile/${msg.senderId.user_nickname}`}
+                                    >
+                                        {msg.senderId.user_nickname}
+                                    </Link> 
+                                ) : (
+                                    <Link 
+                                    className='text-dark fw-bold'
+                                    style={{ textDecoration: 'none' }}
+                                    to={`/profile/${msg.senderId.user_nickname}`}
+                                    >
+                                        {msg.senderId.user_nickname}
+                                    </Link> 
+                                )}  
                             </td>
                             <td>{msg.dm_time}</td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
-            <div className="ms-auto"></div>
+            <div className="ms-auto d-none d-sm-block"></div>
 
         </div>
     )

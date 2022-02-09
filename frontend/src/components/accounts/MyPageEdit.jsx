@@ -49,6 +49,9 @@ function MyPageEdit() {
         })
         .catch(err => {
             console.log(err)
+            // 토큰 만료되면 로그아웃
+            localStorage.removeItem("jwt");
+            navigate("/login");
         })
     }, [])
 
@@ -115,6 +118,9 @@ function MyPageEdit() {
                 })
                 .catch(err => {
                     console.log(err)
+                    // 토큰 만료되면 로그아웃
+                    localStorage.removeItem("jwt");
+                    navigate("/login");
                 })
         }
         else{
@@ -245,14 +251,14 @@ function MyPageEdit() {
                 <div className='d-flex' >
                     <Button 
                         className='ms-auto' 
-                        variant="light"
+                        variant="secondary"
                         onClick={onEdit}
                     >
                         수정
                     </Button>
                     <Button
                         className='ms-2' 
-                        variant="light"
+                        variant="secondary"
                         onClick={onExit}
                     >
                         취소

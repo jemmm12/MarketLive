@@ -40,7 +40,7 @@ function Profile() {
 
 
     const onMessageWrite = () => {
-      navigate(`/message/to/${nickname}`)
+      navigate(`/messageto/${nickname}`)
     }
 
     if (inputs.email === ''){
@@ -78,7 +78,7 @@ function Profile() {
                         <span className='fw-bold'>{inputs.nickname}</span> 님
                     </h2>
                     <h5 className='mt-auto ms-auto me-1'>
-                        매너온도 {inputs.manner}도
+                        매너온도 {inputs.manner}0도
                     </h5>
                 </div>
                 <hr />
@@ -93,7 +93,7 @@ function Profile() {
                 <hr />
                 <Button 
                     className='d-flex ms-auto' 
-                    variant="light"
+                    variant="secondary"
                     onClick={onMessageWrite}
                 >
                     쪽지 보내기

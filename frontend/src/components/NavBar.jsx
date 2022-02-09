@@ -18,14 +18,14 @@ function NavBar() {
     name: state.member.name,
   }));
 
-  const dispatch = useDispatch();
-  const logoutSuccess = () => dispatch(logout());
-  const onClickLogout = () => {
-    localStorage.removeItem("jwt");
-    localStorage.removeItem("isLogin");
-    logoutSuccess();
-    navigate("/");
-  };
+  // const dispatch = useDispatch();
+  // const logoutSuccess = () => dispatch(logout());
+  // const onClickLogout = () => {
+  //   localStorage.removeItem("jwt");
+  //   localStorage.removeItem("isLogin");
+  //   logoutSuccess();
+  //   navigate("/");
+  // };
 
   // 버튼 누를 때 링크 이동
   const onSignup = () => {
@@ -43,6 +43,9 @@ function NavBar() {
   const onMypage = () => {
     navigate("/mypage");
   };
+  const onBroadMake = () => {
+    navigate("/broadmake");
+  }
 
   return (
     <div>
@@ -76,11 +79,9 @@ function NavBar() {
             style={{ cursor: "pointer" }}
             className="fw-bold ms-4"
           >
-            <img src="../img/logo.png" alt="" 
-              style={{width:"120px"}}
-            />
+            <img src="../img/logo.png" alt="" style={{ width: "120px" }} />
           </Navbar.Brand>
-          <Navbar.Toggle aria-controls="navbarScroll" className="me-3"/>
+          <Navbar.Toggle aria-controls="navbarScroll" className="me-3" />
           <Navbar.Collapse id="navbarScroll">
             <Form className="d-flex ms-auto me-3">
               <FormControl
@@ -90,20 +91,25 @@ function NavBar() {
                 aria-label="Search"
                 // style={{ width: '300px' }}
               />
-              <Button variant="outline-secondary" className="mt-2 my-md-0 ">
+              <Button
+                variant="outline-secondary"
+                className="mt-2 my-md-0 "
+                style={{ fontFamily: "mainFont" }}
+              >
                 Search
               </Button>
             </Form>
-            {localStorage.isLogin ? (
+            {localStorage.jwt ? (
               // 로그인 되어 있으면
               <Nav
                 className="me-2 my-2 my-md-0 fw-bold"
                 style={{ maxHeight: "150px" }}
                 navbarScroll
               >
+                <Nav.Link onClick={onBroadMake}>방송하기</Nav.Link>
                 <Nav.Link onClick={onMessage}>쪽지함</Nav.Link>
                 <Nav.Link onClick={onMypage}>마이페이지</Nav.Link>
-                <Nav.Link onClick={onClickLogout}>로그아웃</Nav.Link>
+                {/* <Nav.Link onClick={onClickLogout}>로그아웃</Nav.Link> */}
               </Nav>
             ) : (
               // 로그인 안되어 있으면
