@@ -10,6 +10,7 @@
     <file type="web" url="file://$PROJECT_DIR$/Auth" />
     <file type="web" url="file://$PROJECT_DIR$/DM" />
     <file type="web" url="file://$PROJECT_DIR$/File" />
+    <file type="web" url="file://$PROJECT_DIR$/RTC" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="jbr-11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
