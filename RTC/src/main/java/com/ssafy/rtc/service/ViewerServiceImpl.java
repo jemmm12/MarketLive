@@ -15,7 +15,7 @@ public class ViewerServiceImpl implements ViewerService{
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public RoomDto enterRoom(String broad_userid, String viewer_userid) {
+    public RoomDto enterRoom(long broad_userid, long viewer_userid) {
         // room 정보 가져오기
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         RoomDto roomDto = GlobalFunctions.getRoomDto(broad_userid, hashOperations);
@@ -23,17 +23,17 @@ public class ViewerServiceImpl implements ViewerService{
         // room 시청자 정보 추가
         SetOperations<String, String> setOperations = redisTemplate.opsForSet();
         String VIEWERS_KEY = GlobalFunctions.generateRoomViewersKey(broad_userid);
-        setOperations.add(VIEWERS_KEY, viewer_userid);
+        setOperations.add(VIEWERS_KEY, String.valueOf(viewer_userid));
         
         return roomDto;
     }
 
     @Override
-    public void exitRoom(String broad_userid, String viewer_userid) {
+    public void exitRoom(long broad_userid, long viewer_userid) {
         // room 시청자 정보 제거
         SetOperations<String, String> setOperations = redisTemplate.opsForSet();
         String VIEWERS_KEY = GlobalFunctions.generateRoomViewersKey(broad_userid);
-        setOperations.remove(VIEWERS_KEY, viewer_userid);
+        setOperations.remove(VIEWERS_KEY, String.valueOf(viewer_userid));
     }
 
 

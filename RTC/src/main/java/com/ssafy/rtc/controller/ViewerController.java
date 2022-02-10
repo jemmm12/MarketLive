@@ -20,16 +20,16 @@ public class ViewerController {
 
     @ApiOperation(value = "방 입장", notes = "시청자는 방에 입장한다. 방장의 방 정보를 가져온다.", response = RoomDto.class)
     @GetMapping("/enter-room/{userid}")
-    public ResponseEntity<RoomDto> enterRoom(@PathVariable("userid") @ApiParam(value = "방장의 user id", required = true) String broad_userid,
-                                             @RequestParam @ApiParam(value = "viewer의 user id", required = true) String viewer_userid) {
+    public ResponseEntity<RoomDto> enterRoom(@PathVariable("userid") @ApiParam(value = "방장의 user id", required = true) long broad_userid,
+                                             @RequestParam @ApiParam(value = "viewer의 user id", required = true) long viewer_userid) {
         RoomDto roomDto = viewerService.enterRoom(broad_userid, viewer_userid);
         return new ResponseEntity<>(roomDto, HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "방 나가기", notes = "시청자는 방에서 나간다.", response = String.class)
     @DeleteMapping("/exit-room")
-    public ResponseEntity<String> exitRoom(@RequestParam @ApiParam(value = "방장의 user id", required = true) String broad_userid,
-                                           @RequestParam @ApiParam(value = "viewer의 user id", required = true) String viewer_userid) {
+    public ResponseEntity<String> exitRoom(@RequestParam @ApiParam(value = "방장의 user id", required = true) long broad_userid,
+                                           @RequestParam @ApiParam(value = "viewer의 user id", required = true) long viewer_userid) {
         try {
             viewerService.exitRoom(broad_userid, viewer_userid);
         } catch (Exception e) {

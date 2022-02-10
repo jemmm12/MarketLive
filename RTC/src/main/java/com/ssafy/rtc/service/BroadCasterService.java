@@ -4,8 +4,9 @@ import com.ssafy.rtc.dto.RoomDto;
 
 public interface BroadCasterService {
 
-    RoomDto getRoom(String userid);
-    void createModifyRoom(RoomDto roomDto) throws Exception;
-    void blowRoom(String userid) throws Exception;
+    RoomDto getRoom(long userid);
+    void createRoom(RoomDto roomDto) throws Exception;
+    void modifyRoom(RoomDto roomDto) throws Exception;
+    void blowRoom(long userid) throws Exception;
 
 }

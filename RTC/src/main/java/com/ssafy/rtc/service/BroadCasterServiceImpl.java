@@ -18,21 +18,32 @@ public class BroadCasterServiceImpl implements BroadCasterService {
     private final StringRedisTemplate redisTemplate;
 
     @Override
-    public RoomDto getRoom(String userid) {
+    public RoomDto getRoom(long userid) {
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         RoomDto roomDto = GlobalFunctions.getRoomDto(userid, hashOperations);
         return roomDto;
     }
 
     @Override
-    public void createModifyRoom(RoomDto roomDto) {
+    public void createRoom(RoomDto roomDto) {
+        // TODO: 사진 저장 추가
+
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         String KEY = GlobalFunctions.generateRoomInfoKey(roomDto.getUserid());
         hashOperations.putAll(KEY, roomDtoToMap(roomDto));
     }
 
     @Override
-    public void blowRoom(String userid) {
+    public void modifyRoom(RoomDto roomDto) {
+        // TODO: 사진 수정
+
+        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        String KEY = GlobalFunctions.generateRoomInfoKey(roomDto.getUserid());
+        hashOperations.putAll(KEY, roomDtoToMap(roomDto));
+    }
+
+    @Override
+    public void blowRoom(long userid) {
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         String KEY = GlobalFunctions.generateRoomInfoKey(userid);
         redisTemplate.delete(KEY);

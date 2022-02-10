@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.HashOperations;
 
 public class GlobalFunctions {
 
-    public static String generateRoomInfoKey(String userid) {
+    public static String generateRoomInfoKey(long userid) {
         StringBuffer sb = new StringBuffer();
         sb.append(GlobalConstants.NAMESPACAE_ROOM)
                 .append(":")
@@ -15,7 +15,7 @@ public class GlobalFunctions {
         return sb.toString();
     }
 
-    public static String generateRoomViewersKey(String userid) {
+    public static String generateRoomViewersKey(long userid) {
         StringBuffer sb = new StringBuffer();
         sb.append(GlobalConstants.NAMESPACAE_ROOM)
                 .append(":")
@@ -25,7 +25,7 @@ public class GlobalFunctions {
         return sb.toString();
     }
 
-    public static RoomDto getRoomDto(String userid, HashOperations<String, Object, Object> hashOperations) {
+    public static RoomDto getRoomDto(long userid, HashOperations<String, Object, Object> hashOperations) {
         String key = generateRoomInfoKey(userid);
         RoomDto roomDto = new RoomDto();
         roomDto.setUserid(userid);

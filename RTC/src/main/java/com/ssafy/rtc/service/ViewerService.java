@@ -4,7 +4,7 @@ import com.ssafy.rtc.dto.RoomDto;
 
 public interface ViewerService {
 
-    RoomDto enterRoom(String broad_userid, String viewer_userid);
-    void exitRoom(String broad_userid, String viewer_userid);
+    RoomDto enterRoom(long broad_userid, long viewer_userid);
+    void exitRoom(long broad_userid, long viewer_userid);
 
 }

@@ -20,7 +20,7 @@ public class BroadCasterController {
 
     @ApiOperation(value = "방 정보 가져오기", notes = "해당 BroadCaster의 방 정보를 가져온다.", response = RoomDto.class)
     @GetMapping("/get-room/{userid}")
-    public ResponseEntity<RoomDto> getRoom(@PathVariable("userid") @ApiParam(value = "방 정보를 얻어올 방의 user id", required = true) String userid) {
+    public ResponseEntity<RoomDto> getRoom(@PathVariable("userid") @ApiParam(value = "방 정보를 얻어올 방의 user id", required = true) long userid) {
         RoomDto roomDto = broadCasterService.getRoom(userid);
         return new ResponseEntity<RoomDto>(roomDto, HttpStatus.CREATED);
     }
@@ -29,7 +29,7 @@ public class BroadCasterController {
     @PostMapping("/create-room")
     public ResponseEntity<String> createRoom(@RequestBody @ApiParam(value = "방을 만들기 위한 방 정보", required = true) RoomDto roomDto) {
         try{
-            broadCasterService.createModifyRoom(roomDto);
+            broadCasterService.createRoom(roomDto);
         }catch(Exception e){
             return new ResponseEntity<>("create room failed", HttpStatus.BAD_REQUEST);
         }
@@ -40,7 +40,7 @@ public class BroadCasterController {
     @PutMapping("/modify-room")
     public ResponseEntity<String> modifyRoom(@RequestBody @ApiParam(value = "방을 수정하기 위한 방 정보", required = true) RoomDto roomDto) {
         try{
-            broadCasterService.createModifyRoom(roomDto);
+            broadCasterService.modifyRoom(roomDto);
         }catch(Exception e){
             return new ResponseEntity<>("modify room failed", HttpStatus.BAD_REQUEST);
         }
@@ -49,7 +49,7 @@ public class BroadCasterController {
 
     @ApiOperation(value = "방 폭파", notes = "BroadCaster가 방을 없앤다.", response = String.class)
     @DeleteMapping("/blow-room")
-    public ResponseEntity<String> blowRoom(@RequestParam @ApiParam(value = "폭파할 방의 user id", required = true) String userid) {
+    public ResponseEntity<String> blowRoom(@RequestParam @ApiParam(value = "폭파할 방의 user id", required = true) long userid) {
         try{
             broadCasterService.blowRoom(userid);
         }catch(Exception e){
