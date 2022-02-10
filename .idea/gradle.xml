@@ -42,6 +42,17 @@
           </set>
         </option>
       </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/RTC" />
+        <option name="gradleHome" value="$PROJECT_DIR$/../../../../Gradle/gradle-7.3.3" />
+        <option name="gradleJvm" value="16 (2)" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/RTC" />
+          </set>
+        </option>
+      </GradleProjectSettings>
     </option>
   </component>
 </project>
