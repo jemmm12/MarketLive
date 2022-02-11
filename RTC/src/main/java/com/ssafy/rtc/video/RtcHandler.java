@@ -8,12 +8,12 @@ import org.kurento.client.*;
 import org.kurento.jsonrpc.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,7 +22,7 @@ public class RtcHandler extends TextWebSocketHandler {
     private static final Logger log = LoggerFactory.getLogger(RtcHandler.class);
     private static final Gson gson = new GsonBuilder().create();
 
-    @Autowired
+    @Resource(name="kurentoClient")
     private KurentoClient kurento;
 
     private final ConcurrentHashMap<String, UserSession> viewers = new ConcurrentHashMap<>();
