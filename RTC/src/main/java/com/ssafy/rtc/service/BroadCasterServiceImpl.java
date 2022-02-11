@@ -66,7 +66,7 @@ public class BroadCasterServiceImpl implements BroadCasterService {
     }
 
     private void makeConnection(Long broadcaster_id){
-        roomSession.put(broadcaster_id, new RoomConnection());
+        roomSession.put(broadcaster_id, new RoomConnection(broadcaster_id));
     }
 
     private void blowConnection(Long broadcaster_id){

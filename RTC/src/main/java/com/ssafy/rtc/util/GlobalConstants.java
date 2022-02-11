@@ -17,7 +17,7 @@ public class GlobalConstants {
     public static final String ROOMDTO_THUMBNAIL = "thumbnail";
 
     // websocket url
-    public static final String SOCKET_URL = "/play/{broadCasterUserId}";
+    public static final String SOCKET_URL = "/play/";
 
     // rtc constants
     public static final String PROPERTY_ID = "id";
