@@ -15,6 +15,6 @@ public class RoomConnection implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new RtcHandler(), "/call");
+        registry.addHandler(new RtcHandler(), "/call").setAllowedOrigins("*");
     }
 }
