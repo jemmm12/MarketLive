@@ -1,5 +1,6 @@
 package com.ssafy.rtc.video;
 
+import com.ssafy.rtc.util.GlobalConstants;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -15,6 +16,6 @@ public class RoomConnection implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new RtcHandler(), "/call").setAllowedOrigins("*");
+        registry.addHandler(new RtcHandler(), GlobalConstants.SOCKET_URL + broadCasterUserId).setAllowedOrigins("*");
     }
 }
