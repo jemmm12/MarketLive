@@ -26,7 +26,7 @@ public class RtcHandler extends TextWebSocketHandler {
     private KurentoClient kurento;
 
     private final ConcurrentHashMap<String, UserSession> viewers = new ConcurrentHashMap<>();
-    public UserSession broadCaster;    //modify
+    private UserSession broadCaster;
     private MediaPipeline pipeline;
 
     @Override

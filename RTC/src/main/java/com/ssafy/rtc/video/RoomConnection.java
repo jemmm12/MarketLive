@@ -9,15 +9,13 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 public class RoomConnection implements WebSocketConfigurer {
 
     public String broadCasterUserId;
-    public RtcHandler rtcHandler;
 
     public RoomConnection(long broadCasterUserId) {
         this.broadCasterUserId = Long.toString(broadCasterUserId);
-        this.rtcHandler = new RtcHandler();
     }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(rtcHandler, GlobalConstants.SOCKET_URL + broadCasterUserId).setAllowedOrigins("*");
+        registry.addHandler(new RtcHandler(), "/call").setAllowedOrigins("*");
     }
 }
