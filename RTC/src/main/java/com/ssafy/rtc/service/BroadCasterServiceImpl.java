@@ -75,7 +75,6 @@ public class BroadCasterServiceImpl implements BroadCasterService {
 
     @Override
     public String getConnection(Long broadcaster_id){
-
-        return  " , ";
+        return roomSession.get(broadcaster_id).broadCasterUserId+", ";
     }
 }
