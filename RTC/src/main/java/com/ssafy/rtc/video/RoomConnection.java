@@ -11,7 +11,7 @@ public class RoomConnection implements WebSocketConfigurer {
     private String broadCasterUserId;
 
     public RoomConnection(long broadCasterUserId) {
-        this.broadCasterUserId = String.valueOf(broadCasterUserId);
+        this.broadCasterUserId = Long.toString(broadCasterUserId);
     }
 
     @Override
