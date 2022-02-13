@@ -72,4 +72,8 @@ public class BroadCasterServiceImpl implements BroadCasterService {
     private void blowConnection(Long broadcaster_id){
         roomSession.remove(broadcaster_id);
     }
+
+    public String getConnection(Long broadcaster_id){
+        return roomSession.get(broadcaster_id).rtcHandler.broadCaster.toString() + " , ";
+    }
 }
