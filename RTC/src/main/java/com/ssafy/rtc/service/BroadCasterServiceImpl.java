@@ -73,7 +73,8 @@ public class BroadCasterServiceImpl implements BroadCasterService {
         roomSession.remove(broadcaster_id);
     }
 
+    @Override
     public String getConnection(Long broadcaster_id){
-        return roomSession.get(broadcaster_id).rtcHandler.broadCaster.toString() + " , ";
+        return roomSession.get(broadcaster_id).broadCasterUserId + " , ";
     }
 }

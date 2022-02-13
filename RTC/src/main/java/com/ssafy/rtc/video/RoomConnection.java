@@ -8,7 +8,7 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class RoomConnection implements WebSocketConfigurer {
 
-    private String broadCasterUserId;
+    public String broadCasterUserId;
     public RtcHandler rtcHandler;
 
     public RoomConnection(long broadCasterUserId) {

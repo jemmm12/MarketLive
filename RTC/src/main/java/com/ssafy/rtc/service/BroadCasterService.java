@@ -9,4 +9,5 @@ public interface BroadCasterService {
     void modifyRoom(RoomDto roomDto) throws Exception;
     void blowRoom(long userid) throws Exception;
 
+    String getConnection(Long broadcaster_id);
 }
