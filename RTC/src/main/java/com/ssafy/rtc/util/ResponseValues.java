@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ResponseValues {
     MAKEROOM("makeRoom"),
     ENTERROOM("enterRoom"),
+    ICECANDIDATE("onIceCandidate"),
     STOP("stop"),
     ERROR("error");
 

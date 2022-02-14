@@ -55,6 +55,11 @@ public class RoomManager {
         }
     }
 
+    public void iceCandidate(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) {
+        Room room = rooms.get(broadCasterUserId);
+        room.iceCandidate(jsonMessage, session);
+    }
+
     public void stopRoom(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) throws IOException{
         Room room = rooms.get(broadCasterUserId);
         try{
@@ -71,4 +76,6 @@ public class RoomManager {
             handleErrorResponse(t, session, "stopResponse");
         }
     }
+
+
 }

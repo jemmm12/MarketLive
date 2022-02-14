@@ -1,6 +1,7 @@
 package com.ssafy.rtc.video;
 
 import com.google.gson.JsonObject;
+import org.kurento.client.IceCandidate;
 import org.kurento.client.MediaPipeline;
 import org.kurento.client.WebRtcEndpoint;
 import org.kurento.jsonrpc.JsonUtils;
@@ -92,6 +93,25 @@ public class Room {
         nextWebRtc.gatherCandidates();
     }
 
+    public void iceCandidate(JsonObject jsonMessage, WebSocketSession session) {
+        JsonObject candidate = jsonMessage.get("candidate").getAsJsonObject();
+
+        UserSession user = null;
+        if (broadCaster != null) {
+            if (broadCaster.getSession() == session) {
+                user = broadCaster;
+            } else {
+                user = viewers.get(session.getId());
+            }
+        }
+        if (user != null) {
+            IceCandidate cand =
+                    new IceCandidate(candidate.get("candidate").getAsString(), candidate.get("sdpMid")
+                            .getAsString(), candidate.get("sdpMLineIndex").getAsInt());
+            user.addCandidate(cand);
+        }
+    }
+
     public synchronized String stopRoom(JsonObject jsonMessage, WebSocketSession session) throws IOException {
         String sessionId = session.getId();
         if (broadCaster != null && broadCaster.getSession().getId().equals(sessionId)) {
@@ -117,4 +137,6 @@ public class Room {
         }
         return "error";
     }
+
+
 }

@@ -34,6 +34,9 @@ public class RtcHandler extends TextWebSocketHandler {
             case ENTERROOM: //viewer
                 enterRoom(jsonMessage, session);
                 break;
+            case ICECANDIDATE:
+                candidate(jsonMessage, session);
+                break;
             case STOP:
                 stopRoom(jsonMessage, session);
             default:
@@ -51,6 +54,11 @@ public class RtcHandler extends TextWebSocketHandler {
         roomManager.enterRoom(broadCasterUserId, jsonMessage, session);
     }
 
+    private void candidate(JsonObject jsonMessage, WebSocketSession session) {
+        final String broadCasterUserId = jsonMessage.get(ResponseKeys.ROOMID.toString()).getAsString();
+        roomManager.iceCandidate(broadCasterUserId, jsonMessage, session);
+    }
+
     private void stopRoom(JsonObject jsonMessage, WebSocketSession session) throws IOException {
         final String broadCasterUserId = jsonMessage.get(ResponseKeys.ROOMID.toString()).getAsString();
         roomManager.stopRoom(broadCasterUserId, jsonMessage, session);
@@ -58,6 +66,6 @@ public class RtcHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        //stopRoom(session);
+        //roomManager.stopRoom(session);
     }
 }
