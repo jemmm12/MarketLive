@@ -57,11 +57,4 @@ public class BroadCasterController {
         }
         return new ResponseEntity<>("blow room", HttpStatus.CREATED);
     }
-
-    @ApiOperation(value = "테스트용", notes = "handler test", response = String.class)
-    @GetMapping("/abc/{userid}")
-    public ResponseEntity<String> gethandler(@PathVariable("userid") @ApiParam(value = "방 정보를 얻어올 방의 user id", required = true) long userid) {
-        String xxx = broadCasterService.getConnection(userid);
-        return new ResponseEntity<String>(xxx, HttpStatus.CREATED);
-    }
 }

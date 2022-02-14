@@ -3,7 +3,6 @@ package com.ssafy.rtc.service;
 import com.ssafy.rtc.dto.RoomDto;
 import com.ssafy.rtc.util.GlobalConstants;
 import com.ssafy.rtc.util.GlobalFunctions;
-import com.ssafy.rtc.video.RoomConnection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -11,14 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
 public class BroadCasterServiceImpl implements BroadCasterService {
 
     private final StringRedisTemplate redisTemplate;
-    private final ConcurrentHashMap<Long, RoomConnection> roomSession;
 
     @Override
     public RoomDto getRoom(long userid) {
@@ -34,7 +31,6 @@ public class BroadCasterServiceImpl implements BroadCasterService {
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         String KEY = GlobalFunctions.generateRoomInfoKey(roomDto.getUserid());
         hashOperations.putAll(KEY, roomDtoToMap(roomDto));
-        makeConnection(roomDto.getUserid());
     }
 
     @Override
@@ -51,7 +47,6 @@ public class BroadCasterServiceImpl implements BroadCasterService {
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         String KEY = GlobalFunctions.generateRoomInfoKey(userid);
         redisTemplate.delete(KEY);
-        blowConnection(userid);
     }
 
     private Map<String, Object> roomDtoToMap(RoomDto roomDto) {
@@ -63,18 +58,5 @@ public class BroadCasterServiceImpl implements BroadCasterService {
         map.put(GlobalConstants.ROOMDTO_ENDTIME, roomDto.getEndtime());
         map.put(GlobalConstants.ROOMDTO_THUMBNAIL, roomDto.getThumbnail());
         return map;
-    }
-
-    private void makeConnection(Long broadcaster_id){
-        roomSession.put(broadcaster_id, new RoomConnection(broadcaster_id));
-    }
-
-    private void blowConnection(Long broadcaster_id){
-        roomSession.remove(broadcaster_id);
-    }
-
-    @Override
-    public String getConnection(Long broadcaster_id){
-        return roomSession.get(broadcaster_id).broadCasterUserId+", ";
     }
 }
