@@ -62,6 +62,16 @@ public class Room {
     }
 
     public synchronized void enterRoom(JsonObject jsonMessage, WebSocketSession session) throws IOException {
+        if (broadCaster == null || broadCaster.getWebRtcEndpoint() == null) {
+            JsonObject response = new JsonObject();
+            response.addProperty("id", "viewerResponse");
+            response.addProperty("response", "rejected");
+            response.addProperty("message",
+                    "No active sender now. Become sender or . Try again later ...");
+            session.sendMessage(new TextMessage(response.toString()));
+            return;
+        }
+
         UserSession viewer = new UserSession(session);
         viewers.put(session.getId(), viewer);
         WebRtcEndpoint nextWebRtc = new WebRtcEndpoint.Builder(pipeline).build();
