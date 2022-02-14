@@ -16,7 +16,7 @@ public enum ResponseValues {
 
     public static ResponseValues findByValues(String value){
         for(ResponseValues val : ResponseValues.values()){
-            if(val.equals(value)){
+            if(val.toString().equals(value)){
                 return val;
             }
         }
