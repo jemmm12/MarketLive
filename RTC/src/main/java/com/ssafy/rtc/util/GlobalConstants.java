@@ -19,16 +19,4 @@ public class GlobalConstants {
     // websocket url
     public static final String SOCKET_URL = "/play/";
 
-    // rtc constants
-    public static final String PROPERTY_ID = "id";
-    public static final String PROPERTY_CANDIDATE = "candidate";
-    public static final String PROPERTY_RESPONSE = "response";
-    public static final String PROPERTY_MESSAGE = "message";
-    public static final String PROPERTY_SDPANSWER = "sdpAnswer";
-    public static final String VALUE_BROADCASTER = "broadCasterResponse";
-    public static final String VALUE_VIEWER = "viewerResponse";
-    public static final String VALUE_REJECTED = "rejected";
-    public static final String VALUE_ICECANDIDATE = "iceCandidate";
-    public static final String VALUE_ACCEPTED = "accepted";
-
 }

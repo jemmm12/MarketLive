@@ -1,5 +1,6 @@
 package com.ssafy.rtc.config.kurento;
 
+import com.ssafy.rtc.video.RoomManager;
 import com.ssafy.rtc.video.RtcHandler;
 import org.kurento.client.KurentoClient;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,9 @@ public class KurentoConfig implements WebSocketConfigurer {
     public KurentoClient kurentoClient() {
         return KurentoClient.create();
     }
+
+    @Bean
+    public RoomManager roomManager() { return new RoomManager(); }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
