@@ -38,13 +38,18 @@ public class RtcHandler extends TextWebSocketHandler {
                 candidate(jsonMessage, session);
                 break;
             case STOP:
-                stopRoom(jsonMessage, session);
+                stopRoom(session);
             default:
                 JsonObject response = new JsonObject();
                 response.addProperty("id", jsonMessage.get(ResponseKeys.ID.toString()).getAsString());
                 session.sendMessage(new TextMessage(response.toString()));
                 break;
         }
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        stopRoom(session);
     }
 
     private void makeRoom(JsonObject jsonMessage, WebSocketSession session) throws IOException {
@@ -62,13 +67,7 @@ public class RtcHandler extends TextWebSocketHandler {
         roomManager.iceCandidate(broadCasterUserId, jsonMessage, session);
     }
 
-    private void stopRoom(JsonObject jsonMessage, WebSocketSession session) throws IOException {
-        final String broadCasterUserId = jsonMessage.get(ResponseKeys.ROOMID.toString()).getAsString();
-        roomManager.stopRoom(broadCasterUserId, jsonMessage, session);
-    }
-
-    @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        //roomManager.stopRoom(session);
+    private void stopRoom(WebSocketSession session) throws IOException {
+        roomManager.stop(session);
     }
 }

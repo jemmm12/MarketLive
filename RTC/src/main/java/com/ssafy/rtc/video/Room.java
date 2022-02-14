@@ -35,18 +35,7 @@ public class Room {
         broadCaster = new UserSession(session);
         broadCaster.setWebRtcEndpoint(new WebRtcEndpoint.Builder(pipeline).build());
         WebRtcEndpoint broadCasterWebRtc = broadCaster.getWebRtcEndpoint();
-        broadCasterWebRtc.addIceCandidateFoundListener(event -> {
-            JsonObject response = new JsonObject();
-            response.addProperty("id", "iceCandidate");
-            response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
-            try {
-                synchronized (session) {
-                    session.sendMessage(new TextMessage(response.toString()));
-                }
-            } catch (IOException e) {
-                log.debug(e.getMessage());
-            }
-        });
+        addListener(session, broadCasterWebRtc);
         String sdpOffer = jsonMessage.getAsJsonPrimitive("sdpOffer").getAsString();
         String sdpAnswer = broadCasterWebRtc.processOffer(sdpOffer);
 
@@ -74,18 +63,7 @@ public class Room {
         UserSession viewer = new UserSession(session);
         viewers.put(session.getId(), viewer);
         WebRtcEndpoint nextWebRtc = new WebRtcEndpoint.Builder(pipeline).build();
-        nextWebRtc.addIceCandidateFoundListener(event -> {
-            JsonObject response = new JsonObject();
-            response.addProperty("id", "iceCandidate");
-            response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
-            try {
-                synchronized (session) {
-                    session.sendMessage(new TextMessage(response.toString()));
-                }
-            } catch (IOException e) {
-                log.debug(e.getMessage());
-            }
-        });
+        addListener(session, nextWebRtc);
         viewer.setWebRtcEndpoint(nextWebRtc);
         broadCaster.getWebRtcEndpoint().connect(nextWebRtc);
         String sdpOffer = jsonMessage.getAsJsonPrimitive("sdpOffer").getAsString();
@@ -100,6 +78,21 @@ public class Room {
             viewer.sendMessage(response);
         }
         nextWebRtc.gatherCandidates();
+    }
+
+    private void addListener(WebSocketSession session, WebRtcEndpoint nextWebRtc) {
+        nextWebRtc.addIceCandidateFoundListener(event -> {
+            JsonObject response = new JsonObject();
+            response.addProperty("id", "iceCandidate");
+            response.add("candidate", JsonUtils.toJsonObject(event.getCandidate()));
+            try {
+                synchronized (session) {
+                    session.sendMessage(new TextMessage(response.toString()));
+                }
+            } catch (IOException e) {
+                log.debug(e.getMessage());
+            }
+        });
     }
 
     public void iceCandidate(JsonObject jsonMessage, WebSocketSession session) {
@@ -121,7 +114,7 @@ public class Room {
         }
     }
 
-    public synchronized String stopRoom(JsonObject jsonMessage, WebSocketSession session) throws IOException {
+    public synchronized String stop(WebSocketSession session) throws IOException {
         String sessionId = session.getId();
         if (broadCaster != null && broadCaster.getSession().getId().equals(sessionId)) {
             for (UserSession viewer : viewers.values()) {
@@ -146,6 +139,4 @@ public class Room {
         }
         return "error";
     }
-
-
 }
