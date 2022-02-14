@@ -21,13 +21,23 @@ public class RoomManager {
     private final ConcurrentMap<String, Room> rooms = new ConcurrentHashMap<>();    // broad_id, room
 
     public void makeRoom(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) throws IOException {
-        Room room = new Room(broadCasterUserId, kurento.createMediaPipeline());
+        if(rooms.containsKey(broadCasterUserId)){
+            JsonObject response = new JsonObject();
+            response.addProperty("id", "presenterResponse");
+            response.addProperty("response", "rejected");
+            response.addProperty("message",
+                    "Another user is currently acting as sender. Try again later ...");
+            session.sendMessage(new TextMessage(response.toString()));
+            return;
+        }
         try {
+            Room room = new Room(broadCasterUserId, kurento.createMediaPipeline());
             room.initRoom(jsonMessage, session);
+            rooms.put(broadCasterUserId, room);
         }catch(Throwable t){
             handleErrorResponse(t, session, "presenterResponse");
+            return;
         }
-        rooms.put(broadCasterUserId, room);
     }
 
     public void removeRoom(Room room){
@@ -47,8 +57,8 @@ public class RoomManager {
     }
 
     public void enterRoom(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) throws IOException{
-        Room room = rooms.get(broadCasterUserId);
         try{
+            Room room = rooms.get(broadCasterUserId);
             room.enterRoom(jsonMessage, session);
         }catch(Throwable t){
             handleErrorResponse(t, session, "viewerResponse");
