@@ -40,6 +40,9 @@ public class RtcHandler extends TextWebSocketHandler {
             case STOP:
                 stopRoom(jsonMessage, session);
             default:
+                JsonObject response = new JsonObject();
+                response.addProperty("id", "message failed");
+                session.sendMessage(new TextMessage(response.toString()));
                 break;
         }
     }
