@@ -1,6 +1,7 @@
 package com.ssafy.rtc.video;
 
 import com.google.gson.JsonObject;
+import com.ssafy.rtc.util.ResponseKeys;
 import org.kurento.client.KurentoClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +26,7 @@ public class RoomManager {
 
     public void makeRoom(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) throws IOException {
         if(roomsByBid.containsKey(broadCasterUserId)){
-            JsonObject response = new JsonObject();
-            response.addProperty("id", "presenterResponse");
-            response.addProperty("response", "rejected");
-            response.addProperty("message",
-                    "Another user is currently acting as sender. Try again later ...");
-            session.sendMessage(new TextMessage(response.toString()));
+            handleErrorResponse(null, "Another user is currently acting as sender. Try again later ...", session, "presenterResponse");
             return;
         }
         try {
@@ -39,26 +35,9 @@ public class RoomManager {
             roomsByBid.put(broadCasterUserId, room);
             roomsBySession.put(session.getId(), room);
         }catch(Throwable t){
-            handleErrorResponse(t, session, "presenterResponse");
+            handleErrorResponse(t, null, session, "presenterResponse");
             return;
         }
-    }
-
-//    public void removeRoom(Room room){
-//        this.roomsByBid.remove(room.getBroadCasterUserId());
-//        this.roomsBySession.remove()
-//        //room.close();
-//    }
-
-    private void handleErrorResponse(Throwable throwable, WebSocketSession session, String responseId)
-            throws IOException {
-        //stop(session);
-        log.error(throwable.getMessage(), throwable);
-        JsonObject response = new JsonObject();
-        response.addProperty("id", responseId);
-        response.addProperty("response", "rejected");
-        response.addProperty("message", throwable.getMessage());
-        session.sendMessage(new TextMessage(response.toString()));
     }
 
     public void enterRoom(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) throws IOException{
@@ -67,7 +46,7 @@ public class RoomManager {
             room.enterRoom(jsonMessage, session);
             broadCasterByViewer.put(session.getId(), broadCasterUserId);
         }catch(Throwable t){
-            handleErrorResponse(t, session, "viewerResponse");
+            handleErrorResponse(t, "", session, "viewerResponse");
         }
     }
 
@@ -104,7 +83,22 @@ public class RoomManager {
                     break;
             }
         }catch(Throwable t){
-            handleErrorResponse(t, session, "stopResponse");
+            handleErrorResponse(t, "", session, "stopResponse");
         }
+    }
+
+    private void handleErrorResponse(Throwable throwable, String message, WebSocketSession session, String responseId)
+            throws IOException {
+        //stop(session);
+        log.error(throwable.getMessage(), throwable);
+        JsonObject response = new JsonObject();
+        response.addProperty(ResponseKeys.ID.toString(), responseId);
+        response.addProperty(ResponseKeys.RESPONSE.toString(), "rejected");
+        if(throwable != null){
+            response.addProperty(ResponseKeys.MESSAGE.toString(), throwable.getMessage());
+        }else {
+            response.addProperty(ResponseKeys.MESSAGE.toString(), message);
+        }
+        session.sendMessage(new TextMessage(response.toString()));
     }
 }

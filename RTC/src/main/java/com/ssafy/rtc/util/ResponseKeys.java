@@ -8,7 +8,11 @@ import lombok.Getter;
 public enum ResponseKeys {
     ID("id"),
     ROOMID("roomid"),
-    USERID("userid");
+    USERID("userid"),
+    RESPONSE("response"),
+    MESSAGE("message"),
+    SDPANSWER("sdpAnswer"),
+    CANDIDATE("candidate");
 
     private final String value;
 

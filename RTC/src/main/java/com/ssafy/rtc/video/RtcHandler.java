@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.ssafy.rtc.util.ResponseKeys;
-import com.ssafy.rtc.util.ResponseValues;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,21 +26,21 @@ public class RtcHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         final JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
 
-        switch (ResponseValues.findByValues(jsonMessage.get(ResponseKeys.ID.toString()).getAsString())) {
-            case MAKEROOM:  //broadcaster
+        switch (jsonMessage.get(ResponseKeys.ID.toString()).getAsString()) {
+            case "makeRoom":  //broadcaster
                 makeRoom(jsonMessage, session);
                 break;
-            case ENTERROOM: //viewer
+            case "enterRoom": //viewer
                 enterRoom(jsonMessage, session);
                 break;
-            case ICECANDIDATE:
+            case "onIceCandidate":
                 candidate(jsonMessage, session);
                 break;
-            case STOP:
+            case "stop":
                 stopRoom(session);
             default:
                 JsonObject response = new JsonObject();
-                response.addProperty("id", jsonMessage.get(ResponseKeys.ID.toString()).getAsString());
+                response.addProperty(ResponseKeys.ID.toString(), jsonMessage.get(ResponseKeys.ID.toString()).getAsString());
                 session.sendMessage(new TextMessage(response.toString()));
                 break;
         }

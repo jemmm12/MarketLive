@@ -1,6 +1,7 @@
 package com.ssafy.rtc.video;
 
 import com.google.gson.JsonObject;
+import com.ssafy.rtc.util.ResponseKeys;
 import org.kurento.client.IceCandidate;
 import org.kurento.client.MediaPipeline;
 import org.kurento.client.WebRtcEndpoint;
@@ -27,10 +28,6 @@ public class Room {
         log.info("id : {} 의 방이 생성되었습니다", broadCasterUserId);
     }
 
-    public String getBroadCasterUserId() {
-        return broadCasterUserId;
-    }
-
     public synchronized void initRoom(JsonObject jsonMessage, WebSocketSession session) throws IOException {
         broadCaster = new UserSession(session);
         broadCaster.setWebRtcEndpoint(new WebRtcEndpoint.Builder(pipeline).build());
@@ -39,11 +36,7 @@ public class Room {
         String sdpOffer = jsonMessage.getAsJsonPrimitive("sdpOffer").getAsString();
         String sdpAnswer = broadCasterWebRtc.processOffer(sdpOffer);
 
-        JsonObject response = new JsonObject();
-        response.addProperty("id", "presenterResponse");
-        response.addProperty("response", "accepted");
-        response.addProperty("sdpAnswer", sdpAnswer);
-
+        JsonObject response = getJsonObject("presenterResponse", "accepted", null, sdpAnswer, null);
         synchronized (session) {
             broadCaster.sendMessage(response);
         }
@@ -52,11 +45,7 @@ public class Room {
 
     public synchronized void enterRoom(JsonObject jsonMessage, WebSocketSession session) throws IOException {
         if (broadCaster == null || broadCaster.getWebRtcEndpoint() == null) {
-            JsonObject response = new JsonObject();
-            response.addProperty("id", "viewerResponse");
-            response.addProperty("response", "rejected");
-            response.addProperty("message",
-                    "No active sender now. Become sender or . Try again later ...");
+            JsonObject response = getJsonObject("viewerResponse", "rejected", "No active sender now. Become sender or . Try again later ...", null, null);
             session.sendMessage(new TextMessage(response.toString()));
             return;
         }
@@ -69,11 +58,7 @@ public class Room {
         String sdpOffer = jsonMessage.getAsJsonPrimitive("sdpOffer").getAsString();
         String sdpAnswer = nextWebRtc.processOffer(sdpOffer);
 
-        JsonObject response = new JsonObject();
-        response.addProperty("id", "viewerResponse");
-        response.addProperty("response", "accepted");
-        response.addProperty("sdpAnswer", sdpAnswer);
-
+        JsonObject response = getJsonObject("viewerResponse", "accepted", null, sdpAnswer, null);
         synchronized (session) {
             viewer.sendMessage(response);
         }
@@ -97,7 +82,6 @@ public class Room {
 
     public void iceCandidate(JsonObject jsonMessage, WebSocketSession session) {
         JsonObject candidate = jsonMessage.get("candidate").getAsJsonObject();
-
         UserSession user = null;
         if (broadCaster != null) {
             if (broadCaster.getSession() == session) {
@@ -118,11 +102,9 @@ public class Room {
         String sessionId = session.getId();
         if (broadCaster != null && broadCaster.getSession().getId().equals(sessionId)) {
             for (UserSession viewer : viewers.values()) {
-                JsonObject response = new JsonObject();
-                response.addProperty("id", "stopCommunication");
+                JsonObject response = getJsonObject("stopCommunication", null, null, null, null);
                 viewer.sendMessage(response);
             }
-
             log.info("Releasing media pipeline");
             if (pipeline != null) {
                 pipeline.release();
@@ -138,5 +120,25 @@ public class Room {
             return "viewer";
         }
         return "error";
+    }
+
+    private JsonObject getJsonObject(String id, String response, String message, String sdpAnswer, String candidate) {
+        JsonObject result = new JsonObject();
+        if (id != null) {
+            result.addProperty(ResponseKeys.ID.toString(), id);
+        }
+        if (response != null) {
+            result.addProperty(ResponseKeys.RESPONSE.toString(), response);
+        }
+        if (message != null) {
+            result.addProperty(ResponseKeys.MESSAGE.toString(), message);
+        }
+        if (sdpAnswer != null) {
+            result.addProperty(ResponseKeys.SDPANSWER.toString(), sdpAnswer);
+        }
+        if (candidate != null) {
+            result.addProperty(ResponseKeys.CANDIDATE.toString(), candidate);
+        }
+        return result;
     }
 }
