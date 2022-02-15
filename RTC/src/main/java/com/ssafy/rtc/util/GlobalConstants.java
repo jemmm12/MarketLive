@@ -10,6 +10,7 @@ public class GlobalConstants {
 
     // roomDto key
     public static final String ROOMDTO_TITLE = "title";
+    public static final String ROOMDTO_NICKNAME = "nickname";
     public static final String ROOMDTO_CATEGORY = "category";
     public static final String ROOMDTO_INTRODUCE = "introduce";
     public static final String ROOMDTO_STARTTIME = "starttime";

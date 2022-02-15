@@ -1,14 +1,18 @@
 package com.ssafy.rtc.service;
 
+import com.google.common.collect.Lists;
 import com.ssafy.rtc.dto.RoomDto;
 import com.ssafy.rtc.util.GlobalConstants;
 import com.ssafy.rtc.util.GlobalFunctions;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -16,13 +20,6 @@ import java.util.Map;
 public class BroadCasterServiceImpl implements BroadCasterService {
 
     private final StringRedisTemplate redisTemplate;
-
-    @Override
-    public RoomDto getRoom(long userid) {
-        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
-        RoomDto roomDto = GlobalFunctions.getRoomDto(userid, hashOperations);
-        return roomDto;
-    }
 
     @Override
     public void createRoom(RoomDto roomDto) {
@@ -52,6 +49,7 @@ public class BroadCasterServiceImpl implements BroadCasterService {
     private Map<String, Object> roomDtoToMap(RoomDto roomDto) {
         Map<String, Object> map = new HashMap<>();
         map.put(GlobalConstants.ROOMDTO_TITLE, roomDto.getTitle());
+        map.put(GlobalConstants.ROOMDTO_NICKNAME, roomDto.getNickname());
         map.put(GlobalConstants.ROOMDTO_CATEGORY, roomDto.getCategory());
         map.put(GlobalConstants.ROOMDTO_INTRODUCE, roomDto.getIntroduce());
         map.put(GlobalConstants.ROOMDTO_STARTTIME, roomDto.getStarttime());

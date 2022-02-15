@@ -18,13 +18,6 @@ public class BroadCasterController {
 
     private final BroadCasterServiceImpl broadCasterService;
 
-    @ApiOperation(value = "방 정보 가져오기", notes = "해당 BroadCaster의 방 정보를 가져온다.", response = RoomDto.class)
-    @GetMapping("/get-room/{userid}")
-    public ResponseEntity<RoomDto> getRoom(@PathVariable("userid") @ApiParam(value = "방 정보를 얻어올 방의 user id", required = true) long userid) {
-        RoomDto roomDto = broadCasterService.getRoom(userid);
-        return new ResponseEntity<RoomDto>(roomDto, HttpStatus.CREATED);
-    }
-
     @ApiOperation(value = "방 생성", notes = "BroadCaster가 방을 새로 만든다.", response = String.class)
     @PostMapping("/create-room")
     public ResponseEntity<String> createRoom(@RequestBody @ApiParam(value = "방을 만들기 위한 방 정보", required = true) RoomDto roomDto) {

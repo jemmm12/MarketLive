@@ -7,6 +7,7 @@ public class RoomDto {
     private long userid;
     private String title;
     private String category;
+    private String nickname;
     private String introduce;
     private String starttime;
     private String endtime;
