@@ -29,6 +29,7 @@ public class RoomManager {
 
     private final ConcurrentMap<String, Room> roomsByBid = new ConcurrentHashMap<>();    // broadcaster's id, room
     private final ConcurrentMap<String, Room> roomsBySession = new ConcurrentHashMap<>();   // broadcaster's sessionid, room
+    private final ConcurrentMap<String, String> broadIdByBroadSid = new ConcurrentHashMap<>();  // (broadcaster's session id, broad id)
     private final ConcurrentMap<String, String> broadViewerIdByViewerSid = new ConcurrentHashMap<>();   // (viewer's session id, broad + viewer's id)
 
     public void makeRoom(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) throws IOException {
@@ -41,6 +42,7 @@ public class RoomManager {
             room.initRoom(jsonMessage, session);
             roomsByBid.put(broadCasterUserId, room);
             roomsBySession.put(session.getId(), room);
+            broadIdByBroadSid.put(session.getId(), broadCasterUserId);
         } catch (Throwable t) {
             handleErrorResponse(t, null, session, "presenterResponse");
             return;
@@ -73,6 +75,7 @@ public class RoomManager {
             viewerUserId = ids[1];
             room = roomsByBid.get(broadCasterUserId);
         } else {  //현재 세션은 broadcaster
+            broadCasterUserId = broadIdByBroadSid.get(session.getId());  //broadcaster id 안 가지고 오는 버그 수정
             room = roomsBySession.get(session.getId());
         }
 
@@ -110,6 +113,7 @@ public class RoomManager {
                 case "broadcaster":
                     roomsByBid.remove(broadCasterUserId);
                     roomsBySession.remove(session.getId());
+                    broadIdByBroadSid.remove(session.getId());
                     // 모든 viewer 정보 삭제
                     Collection<String> strs = broadViewerIdByViewerSid.values();
                     for (String viewer_id : strs) {
