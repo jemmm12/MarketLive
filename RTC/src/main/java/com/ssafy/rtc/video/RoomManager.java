@@ -87,13 +87,20 @@ public class RoomManager {
         SetOperations<String, String> setOperations = redisTemplate.opsForSet();
         String VIEWERS_KEY = GlobalFunctions.generateRoomViewersKey(Long.parseLong(broadCasterUserId));
         if (viewerUserId != null) {   // viewer
-            setOperations.remove(VIEWERS_KEY, viewerUserId);
+            if(setOperations.isMember(VIEWERS_KEY, viewerUserId))
+            {
+                setOperations.remove(VIEWERS_KEY, viewerUserId);
+            }
         } else {  //broadcaster
             // set 삭제
-            redisTemplate.delete(VIEWERS_KEY);
+            if(redisTemplate.hasKey(VIEWERS_KEY)) {
+                redisTemplate.delete(VIEWERS_KEY);
+            }
             // room 삭제
             String ROOMINFO_KEY = GlobalFunctions.generateRoomInfoKey(Long.parseLong(broadCasterUserId));
-            redisTemplate.delete(ROOMINFO_KEY);
+            if(redisTemplate.hasKey(ROOMINFO_KEY)) {
+                redisTemplate.delete(ROOMINFO_KEY);
+            }
         }
     }
 
