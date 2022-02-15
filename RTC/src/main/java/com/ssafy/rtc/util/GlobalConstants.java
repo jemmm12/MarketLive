@@ -16,4 +16,7 @@ public class GlobalConstants {
     public static final String ROOMDTO_ENDTIME = "endtime";
     public static final String ROOMDTO_THUMBNAIL = "thumbnail";
 
+    // websocket url
+    public static final String SOCKET_URL = "/play/";
+
 }
