@@ -1,6 +1,7 @@
 package com.ssafy.rtc.service;
 
 import com.ssafy.rtc.dto.RoomDto;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface BroadCasterService {
 

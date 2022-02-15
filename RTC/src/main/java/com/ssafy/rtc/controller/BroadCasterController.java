@@ -2,6 +2,7 @@ package com.ssafy.rtc.controller;
 
 import com.ssafy.rtc.dto.RoomDto;
 import com.ssafy.rtc.service.BroadCasterServiceImpl;
+import com.ssafy.rtc.util.MD5Generator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -9,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 
 @RestController
 @RequestMapping(path = "/broad")
@@ -25,10 +29,40 @@ public class BroadCasterController {
         return new ResponseEntity<RoomDto>(roomDto, HttpStatus.CREATED);
     }
 
+//    @PostMapping("/image")
+//    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile files) {
+//
+//    }
+
     @ApiOperation(value = "방 생성", notes = "BroadCaster가 방을 새로 만든다.", response = String.class)
     @PostMapping("/create-room")
-    public ResponseEntity<String> createRoom(@RequestBody @ApiParam(value = "방을 만들기 위한 방 정보", required = true) RoomDto roomDto) {
+    public ResponseEntity<String> createRoom(@RequestParam("file") MultipartFile files, RoomDto roomDto) {
+        System.out.println("ㅎㅇㅎㅇㅎㅇ2");
         try{
+//            String baseDir = "D:\\thumbnailTest";
+//            String filePath = baseDir + "\\" + files.getOriginalFilename();
+//            files.transferTo(new File(filePath));
+//            roomDto.setThumbnail(filePath);
+
+            System.out.println("ㅎㅇㅎㅇㅎㅇ3");
+            String origFilename = files.getOriginalFilename();
+            String filename = new MD5Generator(origFilename).toString();
+            /* 실행되는 위치의 'files' 폴더에 파일이 저장됩니다. */
+            String savePath = System.getProperty("user.dir") + "\\files";
+            /* 파일이 저장되는 폴더가 없으면 폴더를 생성합니다. */
+            if (!new File(savePath).exists()) {
+                try{
+                    new File(savePath).mkdir();
+                }
+                catch(Exception e){
+                    e.getStackTrace();
+                }
+            }
+            String filePath = savePath + "\\" + filename;
+            files.transferTo(new File(filePath));
+            System.out.println("ㅎㅇㅎㅇㅎㅇ");
+            roomDto.setThumbnail(filePath);
+
             broadCasterService.createRoom(roomDto);
         }catch(Exception e){
             return new ResponseEntity<>("create room failed", HttpStatus.BAD_REQUEST);

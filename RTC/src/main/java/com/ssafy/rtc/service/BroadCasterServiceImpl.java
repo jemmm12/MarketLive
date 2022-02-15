@@ -4,12 +4,18 @@ import com.ssafy.rtc.dto.RoomDto;
 import com.ssafy.rtc.util.GlobalConstants;
 import com.ssafy.rtc.util.GlobalFunctions;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +33,19 @@ public class BroadCasterServiceImpl implements BroadCasterService {
     @Override
     public void createRoom(RoomDto roomDto) {
         // TODO: 사진 저장 추가
+//        String uploadUrl = "D:/thumbnailTest";
+//        roomDto.setThumbnail(filePath);
+//        UUID uuid = UUID.randomUUID();
+//        String imgFileName = uuid + "_" + files.getOriginalFilename();
+//        Path imageFilePath = Paths.get(uploadUrl + imgFileName);
+
+//        try {
+//            Files.write(imageFilePath, files.getBytes());
+//        }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        roomDto.setThumbnail(imgFileName);
 
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         String KEY = GlobalFunctions.generateRoomInfoKey(roomDto.getUserid());
