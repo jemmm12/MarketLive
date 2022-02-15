@@ -29,22 +29,10 @@ public class BroadCasterController {
         return new ResponseEntity<RoomDto>(roomDto, HttpStatus.CREATED);
     }
 
-//    @PostMapping("/image")
-//    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile files) {
-//
-//    }
-
     @ApiOperation(value = "방 생성", notes = "BroadCaster가 방을 새로 만든다.", response = String.class)
     @PostMapping("/create-room")
     public ResponseEntity<String> createRoom(@RequestParam("file") MultipartFile files, RoomDto roomDto) {
-        System.out.println("ㅎㅇㅎㅇㅎㅇ2");
         try{
-//            String baseDir = "D:\\thumbnailTest";
-//            String filePath = baseDir + "\\" + files.getOriginalFilename();
-//            files.transferTo(new File(filePath));
-//            roomDto.setThumbnail(filePath);
-
-            System.out.println("ㅎㅇㅎㅇㅎㅇ3");
             String origFilename = files.getOriginalFilename();
             String filename = new MD5Generator(origFilename).toString();
             /* 실행되는 위치의 'files' 폴더에 파일이 저장됩니다. */
@@ -60,7 +48,6 @@ public class BroadCasterController {
             }
             String filePath = savePath + "\\" + filename;
             files.transferTo(new File(filePath));
-            System.out.println("ㅎㅇㅎㅇㅎㅇ");
             roomDto.setThumbnail(filePath);
 
             broadCasterService.createRoom(roomDto);

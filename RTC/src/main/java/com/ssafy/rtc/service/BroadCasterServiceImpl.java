@@ -33,20 +33,6 @@ public class BroadCasterServiceImpl implements BroadCasterService {
     @Override
     public void createRoom(RoomDto roomDto) {
         // TODO: 사진 저장 추가
-//        String uploadUrl = "D:/thumbnailTest";
-//        roomDto.setThumbnail(filePath);
-//        UUID uuid = UUID.randomUUID();
-//        String imgFileName = uuid + "_" + files.getOriginalFilename();
-//        Path imageFilePath = Paths.get(uploadUrl + imgFileName);
-
-//        try {
-//            Files.write(imageFilePath, files.getBytes());
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        roomDto.setThumbnail(imgFileName);
-
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         String KEY = GlobalFunctions.generateRoomInfoKey(roomDto.getUserid());
         hashOperations.putAll(KEY, roomDtoToMap(roomDto));
