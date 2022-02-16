@@ -5,9 +5,8 @@ server:
   ssl:
     enabled: true
     key-store-type: PKCS12
-    key-store: classpath:keystore/ssafy.p12
+    key-store: classpath:keystore/keystore.p12
     key-store-password: /.,/.,c110
-    key-alias: ssafy
 
 trust:
   store: classpath:keystore/ssafy.p12
