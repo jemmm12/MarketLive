@@ -18,18 +18,23 @@ public class Room {
     private final Logger log = LoggerFactory.getLogger(Room.class);
 
     private MediaPipeline pipeline;
-    private final ConcurrentHashMap<String, UserSession> viewers = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, UserSession> viewers;
     private UserSession broadCaster;
     private final String broadCasterUserId;
+    private final ChatHelper chatHelper;
 
     public Room(String broadCasterUserId, MediaPipeline pipeline) {
+        this.viewers = new ConcurrentHashMap<>();
         this.broadCasterUserId = broadCasterUserId;
         this.pipeline = pipeline;
+        this.chatHelper = new ChatHelper(viewers);
         log.info("id : {} 의 방이 생성되었습니다", broadCasterUserId);
     }
 
     public synchronized void initRoom(JsonObject jsonMessage, WebSocketSession session) throws IOException {
         broadCaster = new UserSession(session);
+        chatHelper.setBroadCaster(broadCaster);
+
         broadCaster.setWebRtcEndpoint(new WebRtcEndpoint.Builder(pipeline).build());
         WebRtcEndpoint broadCasterWebRtc = broadCaster.getWebRtcEndpoint();
         addListener(session, broadCasterWebRtc);
@@ -41,6 +46,7 @@ public class Room {
             broadCaster.sendMessage(response);
         }
         broadCasterWebRtc.gatherCandidates();
+        chatHelper.setNickName(session.getId(), jsonMessage.get("nickname").getAsString());
     }
 
     public synchronized void enterRoom(JsonObject jsonMessage, WebSocketSession session) throws IOException {
@@ -62,6 +68,8 @@ public class Room {
         synchronized (session) {
             viewer.sendMessage(response);
         }
+        chatHelper.setNickName(session.getId(), jsonMessage.get("nickname").getAsString());
+        chatHelper.enterRoomMessage(session.getId());
         nextWebRtc.gatherCandidates();
     }
 
@@ -98,6 +106,17 @@ public class Room {
         }
     }
 
+    public void sendMessage(JsonObject jsonMessage, WebSocketSession session) throws IOException {
+        String message = jsonMessage.get("message").getAsString();
+        Boolean isBroad;
+        if(broadCaster.getSession().getId().equals(session.getId())){
+            isBroad = true;
+        }else{
+            isBroad = false;
+        }
+        chatHelper.sendMessageHelper(session.getId(), message, isBroad);
+    }
+
     public synchronized String stop(WebSocketSession session) throws IOException {
         String sessionId = session.getId();
         if (broadCaster != null && broadCaster.getSession().getId().equals(sessionId)) {
@@ -113,6 +132,7 @@ public class Room {
             broadCaster = null;
             return "broadcaster";
         } else if (viewers.containsKey(sessionId)) {
+            chatHelper.exitRoomMessage(sessionId);
             if (viewers.get(sessionId).getWebRtcEndpoint() != null) {
                 viewers.get(sessionId).getWebRtcEndpoint().release();
             }

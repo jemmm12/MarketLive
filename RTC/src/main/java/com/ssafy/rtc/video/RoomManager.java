@@ -65,6 +65,15 @@ public class RoomManager {
         room.iceCandidate(jsonMessage, session);
     }
 
+    public void sendMessage(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) throws IOException {
+        try{
+            Room room = roomsByBid.get(broadCasterUserId);
+            room.sendMessage(jsonMessage, session);
+        }catch (Throwable t) {
+            handleErrorResponse(t, "", session, "viewerResponse");
+        }
+    }
+
     public void stop(WebSocketSession session) throws IOException {
         String broadCasterUserId = "";
         String viewerUserId = null;
@@ -147,4 +156,6 @@ public class RoomManager {
         }
         session.sendMessage(new TextMessage(response.toString()));
     }
+
+
 }
