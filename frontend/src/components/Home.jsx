@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Row, Spinner } from "react-bootstrap";
+import './Home.css'
 
 
 function Home() {
@@ -38,6 +39,22 @@ function Home() {
       console.log(err)
     })
   }, []);
+
+  const onProfile = (e) => {
+    navigate("/profile/" + e)
+    // console.log(e)
+  };
+
+  const onBroad = (e) => {
+    // console.log(e)
+    if (localStorage.getItem("jwt")){
+      navigate("/watch/" + e)
+    } else {
+      alert('로그인이 필요합니다.')
+      navigate('/login')
+    }
+    
+  }
 
 
   if (broads === ''){
@@ -98,30 +115,41 @@ function Home() {
                     <img
                       src={broad.thumbnail}
                       alt=""
-                      style={{ height: "100%", width: "100%" }}
+                      style={{ height: "100%", width: "100%", cursor: "pointer" }}
+                      onClick={()=>{onBroad(broad.nickname)}}
                     />
                   ) : (
-                    <div  style={{ width: "100%"}}>
-                    {/* <div style={{ height: "180px", width: "320px" }}> */}
+                    // <div  style={{ width: "100%"}}>
                     <img
                       src='../img/thumbnail.png'
                       // src='../img/home2.png'
                       alt=""
-                      style={{ height: "100%", width: "100%" }}
-                      // style={{ height: "180px", width: "320px" }}
+                      // style={{ height: "100%", width: "100%" }}
+                      // width="320"
+                      // height="180"
+                      style={{ width:"100%", cursor: "pointer"}}
+                      onClick={()=>{onBroad(broad.nickname)}}
                     />
-                    </div>
+                    // </div>
                   )}
                 </div>
                 <div className="d-flex mt-2">
                   <img
                     src="../img/user.png"
                     alt=""
-                    style={{ width: "50px", height: "50px" }}
+                    style={{ width: "50px", height: "50px", cursor: "pointer" }}
+                    onClick={()=>{onProfile(broad.nickname)}}
                   />
                   <div className="ms-1">
-                    <div className="fw-bold">{broad.title}</div>
-                    <div>{broad.nickname}</div>
+                    <div 
+                      className="fw-bold"
+                      onClick={()=>{onBroad(broad.nickname)}}
+                      style={{ cursor: "pointer" }}
+                    >{broad.title}</div>
+                    <div 
+                      onClick={()=>{onProfile(broad.nickname)}} 
+                      style={{ cursor: "pointer" }}
+                    >{broad.nickname}</div>
                   </div>
                 </div>
               </div>
