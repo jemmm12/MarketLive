@@ -16,7 +16,7 @@ function MessageSideBar() {
 
     return(
         <div>
-            <div style={{width: "150px"}} className="ms-3 d-none d-sm-block">
+            <div style={{width: "150px"}} className="ms-3 d-none d-md-block">
                 {/* <ul>
                     <li>
                         <Link to="/message">받은 쪽지</Link>
@@ -48,7 +48,7 @@ function MessageSideBar() {
 
             </div>
 
-            <div className=" d-sm-none mx-auto mt-2" style={{width:"70%"}}>
+            <div className=" d-md-none mx-auto mt-2" style={{width:"90%", maxWidth:"600px"}}>
                 <Nav  className="">
                     <Nav.Link 
                         onClick={onMessage} 

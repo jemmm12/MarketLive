@@ -11,6 +11,7 @@ import MessageWrite from "./components/dm/MessageWrite";
 import MessageTo from "./components/dm/MessageTo";
 import MessageRead from "./components/dm/MessageRead";
 import BroadMake from "./components/broad/BroadMake";
+import Broad from "./components/broad/Broad"
 import "./App.css";
 
 import { useState } from "react/cjs/react.development";
@@ -31,7 +32,8 @@ function App() {
           <Route path="/messageto/:to_nickname" element={<MessageTo />} />
           <Route path="/messageread/:dm_id" element={<MessageRead />} />
           <Route path="/profile/:nickname" element={<Profile />} />
-          <Route path="/broadmake" element={<BroadMake />} />
+          <Route path="/makebroad" element={<BroadMake />} />
+          <Route path="/watch/:nickname" element={<Broad />} />
         </Routes>
       </BrowserRouter>
     </div>

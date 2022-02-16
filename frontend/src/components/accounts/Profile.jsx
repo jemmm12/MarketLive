@@ -21,11 +21,12 @@ function Profile() {
       phone: '',
       thumnailroot: '',
       userid: '',
-  });
+    });
 
-    // 프로필 받아오기
+    const [check, setCheck] = useState(false)
+
     useEffect(() => {
-      axios({
+      axios({   // 프로필 받아오기
           method: 'get',
           url: '/user/search?nickname='+nickname,
       })
@@ -35,18 +36,43 @@ function Profile() {
       })
       .catch(err => {
           console.log(err)
+          navigate('/')
       })
-  }, [])
+
+      if (localStorage.jwt){   // 자기 프로필 접근하면 마이페이지 이동
+        axios({
+          method: 'get',
+          url: '/user/mypage/',
+          headers: {Authorization: localStorage.getItem('jwt')}
+        })
+        .then(res => { 
+            // console.log(res)
+            if(res.data.nickname === nickname){
+              navigate(`/mypage`)
+            }else{
+              setCheck(true)
+            }
+        })
+        .catch(err => {
+            console.log(err)
+            // 토큰 만료되면 로그아웃
+            localStorage.removeItem("jwt");
+            navigate("/login");
+        })
+      }else{
+        setCheck(true)
+      }
+    }, [])
 
 
     const onMessageWrite = () => {
       navigate(`/messageto/${nickname}`)
     }
 
-    if (inputs.email === ''){
+    if (!check){
       return(
           <div className="d-flex">
-          <Spinner animation="border" className="mt-5 mx-auto" />
+          <Spinner animation="border" className="mx-auto" style={{marginTop:"30vh"}} />
           </div>
       )
     }
@@ -68,7 +94,7 @@ function Profile() {
             </button>
           </Link> */}
 
-          <div className='mx-auto mt-4' style={{width:"70%"}}>
+          <div className='mx-auto mt-4' style={{width:"90%", maxWidth:"600px"}}>
                 <div className='border-bottom border-3 border-dark'>
                     <h2 className='fw-bold ms-1'>프로필</h2>
                 </div>
@@ -93,7 +119,8 @@ function Profile() {
                 <hr />
                 <Button 
                     className='d-flex ms-auto' 
-                    variant="secondary"
+                    // variant="secondary"
+                    variant="outline-secondary"
                     onClick={onMessageWrite}
                 >
                     쪽지 보내기

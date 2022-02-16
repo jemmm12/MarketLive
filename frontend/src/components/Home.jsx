@@ -31,17 +31,23 @@ function Home() {
         src="../img/home2.png"
         alt=""
         style={{ width: "100%" }}
-        className="d-flex mx-auto d-none d-md-block"
+        className="d-flex mx-auto d-none d-lg-block"
       />
       <img
         src="../img/home3.png"
         alt=""
         style={{ width: "100%" }}
-        className="d-flex mx-auto d-md-none"
+        className="d-flex mx-auto d-none d-sm-block d-lg-none"
+      />
+      <img
+        src="../img/home4.png"
+        alt=""
+        style={{ width: "100%" }}
+        className="d-flex mx-auto d-sm-none"
       />
       <br /> <br />
-      <div style={{ width: "80%" }} className="mx-auto">
-        <Row sm={1} md={2} lg={3} xl={4} className="">
+      <div style={{ width: "90%", maxWidth:"1200px" }} className="mx-auto">
+        <Row xs={1} sm={2} md={3} lg={4} className="">
           {Array.from({ length: 11 }).map((_, idx) => (
             <div className="mb-4">
               <div className="">

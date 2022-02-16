@@ -63,6 +63,10 @@ function MessageTo() {
 
     // 보내기 버튼 누를시
     const onSend = ()  => {
+        if (title.trim() === '' || content.trim() === ''){
+            alert('제목과 내용을 입력해주세요.')
+        }
+        else{
         axios({     // 쪽지 보내기
             method: 'post',
             url: '/dm/create',
@@ -80,10 +84,11 @@ function MessageTo() {
         .catch(err => {
             console.log(err)
         })
+        }
     }
 
     return(
-        <div className="d-sm-flex">
+        <div className="d-md-flex">
             <MessageSideBar></MessageSideBar>
             {/* <div>
                 <div>
@@ -109,7 +114,7 @@ function MessageTo() {
                 <button onClick={onSend}>보내기</button>
             </div> */}
 
-            <Form style={{ width: '70%' }} className="mx-auto border p-2 mt-4">
+            <Form style={{ width: '90%', maxWidth:"600px" }} className="mx-auto border p-2 mt-3 mt-md-5">
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>받는 사람</Form.Label>
                     <Form.Control 
@@ -143,12 +148,13 @@ function MessageTo() {
                     />
                 </Form.Group>
                 <Button 
-                    variant="secondary"
+                    // variant="secondary"
+                    variant="outline-secondary"
                     onClick={onSend}
                     className="d-flex ms-auto"
                 >보내기</Button>
             </Form>
-            <div className="ms-auto d-none d-sm-block"></div>
+            <div className="ms-auto d-none d-md-block"></div>
         </div>
     )
 }

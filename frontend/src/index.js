@@ -12,7 +12,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 const store = createStore(rootReducer, composeWithDevTools());
 const persistor = persistStore(store);
-SetAuth(localStorage.jwt);
+// SetAuth(localStorage.jwt);
 
 ReactDOM.render(
   <Provider store={store}>

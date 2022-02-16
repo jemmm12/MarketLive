@@ -14,6 +14,7 @@ function MessageRead() {
 
     const [msg, setMsg] = useState('')
     const [id, setId] = useState('')
+    const [date, setDate] = useState('')
 
     
     useEffect(() => {
@@ -39,6 +40,13 @@ function MessageRead() {
         .then(res => {
             console.log(res)
             setMsg(res.data)
+            console.log(new Date(res.data.dm_time))
+            const date_ = new Date(res.data.dm_time)
+            setDate(date_.getFullYear()+'년 '
+            +(date_.getMonth()+1)+'월 '
+            +date_.getDate()+'일 '
+            +date_.getHours()+'시 '
+            +date_.getMinutes()+'분')
         })
         .catch(err => {
             console.log(err)
@@ -54,6 +62,7 @@ function MessageRead() {
             // console.log(res)
         })
         .catch(err => {
+
             console.log(err)
         })
     }, [])
@@ -63,10 +72,10 @@ function MessageRead() {
     // axios 받아오기 전에 key값 오류 방지
     if (msg === ''){
         return(
-            <div className="d-sm-flex">
+            <div className="d-md-flex">
                 <MessageSideBar></MessageSideBar>
-                <Spinner animation="border" className="mt-5 mx-auto d-none d-sm-block"/>
-                <Spinner animation="border" className='d-sm-none mt-5 d-flex mx-auto'/>
+                <Spinner animation="border" className="d-none d-md-block" style={{marginTop:"30vh", marginLeft:"35vw"}}/>
+                <Spinner animation="border" className='d-md-none d-flex mx-auto' style={{marginTop:"30vh"}}/>
             </div>
         )
     }
@@ -80,11 +89,14 @@ function MessageRead() {
         navigate(`/messageto/${msg.senderId.user_nickname}`)
     }
 
+    // const date = new Date(msg.dm_time)
+    // console.log(date)
+
 
     return(
-        <div className='d-sm-flex'>
+        <div className='d-md-flex'>
             <MessageSideBar></MessageSideBar>
-            <div style={{width:"70%"}} className='mx-auto mt-4'>
+            <div style={{width: '90%', maxWidth:"600px"}} className='mx-auto mt-3 mt-md-5'>
                 <div className=' border p-2'>
                     <div className=''>
                         {msg.dm_title}
@@ -103,17 +115,20 @@ function MessageRead() {
                     </Link>
                     <br />
                     <span>날짜: </span>
-                    {msg.dm_time}
+                    {/* {msg.dm_time} */}
+                    {date}
+    
                 </div>
                 <Button 
-                    variant="secondary"
+                    // variant="secondary"
+                    variant="outline-secondary"
                     onClick={onMessage} 
                     className='d-flex ms-auto mt-2'
                 >
                     답장
                 </Button>
             </div>
-            <div className="ms-auto d-none d-sm-block"></div>
+            <div className="ms-auto d-none d-md-block"></div>
             
         </div>
     )

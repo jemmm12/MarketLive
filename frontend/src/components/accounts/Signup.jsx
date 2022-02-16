@@ -79,6 +79,9 @@ function Signup() {
     if (password.length === 0) {
       setPwMsg("");
       setPwCheckMsg("");
+    } else if (password.includes(" ")) {
+      setPwMsg("공백을 포함할 수 없습니다.");
+      setPwMsgColor({ color: "red" });
     } else if (password.length < 6) {
       setPwMsg("6자리 이상 입력해주세요.");
       setPwMsgColor({ color: "red" });
@@ -152,12 +155,18 @@ function Signup() {
     }
   };
 
+  const onKeyPress = (e) => {
+    if (e.key === "Enter") {
+      onSignup();
+    }
+  };
+
   // 로그인 되어있으면 홈으로 이동
   useEffect(() => {
-    if(localStorage.jwt){
-      navigate("/")
+    if (localStorage.jwt) {
+      navigate("/");
     }
-  },[])
+  }, []);
 
   return (
     // <div>
@@ -228,10 +237,13 @@ function Signup() {
 
     //     <button onClick={onSignup}>회원가입</button>
     // </div>
-    <Container fluid="sm">
+    <Container fluid="sm" style={{ width: "90%", maxWidth: "500px" }}>
+      <br />
+      <br />
+      <br />
       <Form>
         <Form.Group as={Row} className="mt-5 justify-content-center">
-          <Col xs={10} sm={8} lg={6} xl={4}>
+          <Col>
             <Form.Control
               className="mb-1"
               type="email"
@@ -286,9 +298,12 @@ function Signup() {
               onChange={onChange}
               value={phone}
               maxLength={15}
+              onKeyPress={onKeyPress}
             ></Form.Control>
             <div className="d-grid gap-2">
-              <Button onClick={onSignup} variant="secondary">회원가입</Button>
+              <Button onClick={onSignup} variant="secondary">
+                회원가입
+              </Button>
             </div>
           </Col>
         </Form.Group>

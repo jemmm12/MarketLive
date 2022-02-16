@@ -49,7 +49,7 @@ function MyPage() {
     if (inputs.email === ''){
         return(
             <div className="d-flex">
-            <Spinner animation="border" className="mt-5 mx-auto" />
+            <Spinner animation="border" className="mx-auto" style={{marginTop:"30vh"}} />
             </div>
         )
     }
@@ -79,7 +79,7 @@ function MyPage() {
                 <button>수정</button>
             </Link> */}
 
-            <div className='mx-auto mt-4' style={{width:"70%"}}>
+            <div className='mx-auto mt-4' style={{width:"90%", maxWidth:"600px"}}>
                 <div className='border-bottom border-3 border-dark'>
                     <h2 className='fw-bold ms-1'>마이페이지</h2>
                 </div>
@@ -121,14 +121,16 @@ function MyPage() {
                 <div className='d-flex' >
                     <Button 
                         className='ms-auto' 
-                        variant="secondary"
+                        // variant="secondary"
+                        variant="outline-secondary"
                         onClick={onMyPageEdit}
                     >
                         수정
                     </Button>
                     <Button 
                         className='ms-2' 
-                        variant="secondary"
+                        // variant="secondary"
+                        variant="outline-secondary"
                         onClick={onClickLogout}
                     >
                         로그아웃
