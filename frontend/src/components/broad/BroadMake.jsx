@@ -116,7 +116,7 @@ function BroadMake() {
         // method:'post',
         method: 'get',
         // url: '/broad/create-room',
-        url: '/room/all',
+        url: 'https://i6c110.p.ssafy.io:8113/room/all',
         // url: 'https://3.38.250.70:8113/room/all',
         // url: "https://3.38.250.70:8113/broad/create-room",
         // data: {
@@ -138,7 +138,7 @@ function BroadMake() {
       axios({
         method:'post',
         // method: 'get',
-        url: '/broad/create-room',
+        url: 'https://i6c110.p.ssafy.io:8113/broad/create-room',
         // url: '/room/all',
         // url: 'https://3.38.250.70:8113/room/all',
         // url: "https://3.38.250.70:8113/broad/create-room",
