@@ -19,24 +19,24 @@ module.exports = (app) => {
             changeOrigin: true
         })
     )
-    // app.use(
-    //     createProxyMiddleware('/broad', {
-    //         target: 'https://3.38.250.70:8113',
-    //         changeOrigin: true
-    //     })
-    // )
-    // app.use(
-    //     createProxyMiddleware('/room', {
-    //         target: 'https://3.38.250.70:8113',
-    //         changeOrigin: true
-    //     })
-    // )
-    // app.use(
-    //     createProxyMiddleware('/viewer', {
-    //         target: 'https://3.38.250.70:8113',
-    //         changeOrigin: true
-    //     })
-    // )
+    app.use(
+        createProxyMiddleware('/broad', {
+            target: 'https://i6c110.p.ssafy.io:8113',
+            changeOrigin: true
+        })
+    )
+    app.use(
+        createProxyMiddleware('/room', {
+            target: 'https://i6c110.p.ssafy.io:8113',
+            changeOrigin: true
+        })
+    )
+    app.use(
+        createProxyMiddleware('/viewer', {
+            target: 'https://i6c110.p.ssafy.io:8113',
+            changeOrigin: true
+        })
+    )
     // app.use(
     //     createProxyMiddleware('/broad', {
     //         target: 'https://i6c110.p.ssafy.io:8113',
