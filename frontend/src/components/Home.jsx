@@ -1,10 +1,13 @@
 import { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Row } from "react-bootstrap";
+import { Row, Spinner } from "react-bootstrap";
+
 
 function Home() {
   const navigate = useNavigate();
+
+  const [broads, setBroads] = useState('')
 
   useEffect(() => {
     if (localStorage.jwt) {
@@ -22,8 +25,46 @@ function Home() {
           localStorage.removeItem("jwt");
           navigate("/");
         });
+      axios({
+        method: 'get',
+        url: '/room/all',
+      })
+      .then(res => {
+        console.log(res)
+        setBroads(data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
     }
   }, []);
+
+  if (broads === ''){
+    return (
+      <div>
+        <img
+          src="../img/home2.png"
+          alt=""
+          style={{ width: "100%" }}
+          className="d-flex mx-auto d-none d-lg-block"
+        />
+        <img
+          src="../img/home3.png"
+          alt=""
+          style={{ width: "100%" }}
+          className="d-flex mx-auto d-none d-sm-block d-lg-none"
+        />
+        <img
+          src="../img/home4.png"
+          alt=""
+          style={{ width: "100%" }}
+          className="d-flex mx-auto d-sm-none"
+        />
+        <br /> <br />
+        <Spinner animation="border" className="d-flex mx-auto" />
+      </div>
+    )
+  }
 
   return (
     <div>
