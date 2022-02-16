@@ -9,7 +9,7 @@ server:
     key-store-password: /.,/.,c110
 
 trust:
-  store: classpath:keystore/ssafy.p12
+  store: classpath:keystore/keystore.p12
   password: /.,/.,c110
 
 spring:

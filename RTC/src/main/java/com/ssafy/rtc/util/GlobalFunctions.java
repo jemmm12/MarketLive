@@ -30,6 +30,7 @@ public class GlobalFunctions {
         RoomDto roomDto = new RoomDto();
         roomDto.setUserid(userid);
         roomDto.setTitle(hashOperations.get(key, GlobalConstants.ROOMDTO_TITLE).toString());
+        roomDto.setNickname(hashOperations.get(key, GlobalConstants.ROOMDTO_NICKNAME).toString());
         roomDto.setCategory(hashOperations.get(key, GlobalConstants.ROOMDTO_CATEGORY).toString());
         roomDto.setIntroduce(hashOperations.get(key, GlobalConstants.ROOMDTO_INTRODUCE).toString());
         roomDto.setStarttime(hashOperations.get(key, GlobalConstants.ROOMDTO_STARTTIME).toString());
