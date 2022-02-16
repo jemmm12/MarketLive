@@ -111,37 +111,10 @@ function BroadMake() {
     if (title.trim() === ''){
       alert('제목을 입력해주세요.')
     }else{
-      console.log(title,category,thumbnail,nickname,userid)
-      axios({
-        // method:'post',
-        method: 'get',
-        // url: '/broad/create-room',
-        url: '/room/all',
-        // url: 'https://3.38.250.70:8113/room/all',
-        // url: "https://3.38.250.70:8113/broad/create-room",
-        // data: {
-        //   'title': title,
-        //   'category': category,
-        //   'thumbnail': thumbnail,
-        //   'nickname': nickname,
-        //   'userid': userid,
-        // }
-      })
-      .then(res => {
-        console.log(res)
-        // navigate('/watch/'+nickname)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-
+      // console.log(title,category,thumbnail,nickname,userid)
       axios({
         method:'post',
-        // method: 'get',
         url: '/broad/create-room',
-        // url: '/room/all',
-        // url: 'https://3.38.250.70:8113/room/all',
-        // url: "https://3.38.250.70:8113/broad/create-room",
         data: {
           'title': title,
           'category': category,
@@ -152,7 +125,7 @@ function BroadMake() {
       })
       .then(res => {
         console.log(res)
-        // navigate('/watch/'+nickname)
+        navigate('/watch/'+nickname)
       })
       .catch(err => {
         console.log(err)
