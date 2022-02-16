@@ -1,33 +1,24 @@
 server:
   port: 8111
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:keystore/keystore.p12
+    key-store-password: /.,/.,c110
+
+trust:
+  store: classpath:keystore/keystore.p12
+  password: /.,/.,c110
 
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url : jdbc:mysql://project1.clzlmjcyxpuf.ap-northeast-2.rds.amazonaws.com:3306/RTS_project
-    username: admin
-    password: gwang10ju
+ datasource:
+   driver-class-name: com.mysql.cj.jdbc.Driver
+   url : jdbc:mysql://project1.clzlmjcyxpuf.ap-northeast-2.rds.amazonaws.com:3306/RTS_project
+   username: admin
+   password: gwang10ju
 
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-    hibernate:
-      format_sql : true
-      ddl-auto: update
-      jdbc:
-        time_zone: Asia/Seoul
-
-#server:
-#  port: 8080
-#
-#spring:
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url : jdbc:mysql://localhost:3306/web_project?useUniCode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
-#    username: ssafy
-#    password: 1234
-#
-#  jpa:
-#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-#    hibernate:
-#      format_sql : true
-#      ddl-auto: update
+ jpa:
+   database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+   hibernate:
+     format_sql : true
+     ddl-auto: update

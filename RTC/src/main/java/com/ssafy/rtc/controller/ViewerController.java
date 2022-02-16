@@ -26,15 +26,15 @@ public class ViewerController {
         return new ResponseEntity<>(roomDto, HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "방 나가기", notes = "시청자는 방에서 나간다.", response = String.class)
-    @DeleteMapping("/exit-room")
-    public ResponseEntity<String> exitRoom(@RequestParam @ApiParam(value = "방장의 user id", required = true) long broad_userid,
-                                           @RequestParam @ApiParam(value = "viewer의 user id", required = true) long viewer_userid) {
-        try {
-            viewerService.exitRoom(broad_userid, viewer_userid);
-        } catch (Exception e) {
-            return new ResponseEntity<>("exit room failed", HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>("exit room", HttpStatus.CREATED);
-    }
+//    @ApiOperation(value = "방 나가기", notes = "시청자는 방에서 나간다.", response = String.class)
+//    @DeleteMapping("/exit-room")
+//    public ResponseEntity<String> exitRoom(@RequestParam @ApiParam(value = "방장의 user id", required = true) long broad_userid,
+//                                           @RequestParam @ApiParam(value = "viewer의 user id", required = true) long viewer_userid) {
+//        try {
+//            viewerService.exitRoom(broad_userid, viewer_userid);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>("exit room failed", HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<>("exit room", HttpStatus.CREATED);
+//    }
 }
