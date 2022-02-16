@@ -141,15 +141,23 @@ function Home() {
                     onClick={()=>{onProfile(broad.nickname)}}
                   />
                   <div className="ms-1">
-                    <div 
-                      className="fw-bold"
-                      onClick={()=>{onBroad(broad.nickname)}}
-                      style={{ cursor: "pointer" }}
-                    >{broad.title}</div>
-                    <div 
-                      onClick={()=>{onProfile(broad.nickname)}} 
-                      style={{ cursor: "pointer" }}
-                    >{broad.nickname}</div>
+                    <div>
+                      <span
+                        className="fw-bold"
+                        onClick={()=>{onBroad(broad.nickname)}}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {broad.title}
+                      </span>
+                    </div>
+                    <div>
+                      <span 
+                        onClick={()=>{onProfile(broad.nickname)}} 
+                        style={{ cursor: "pointer" }}
+                      >
+                        {broad.nickname}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
