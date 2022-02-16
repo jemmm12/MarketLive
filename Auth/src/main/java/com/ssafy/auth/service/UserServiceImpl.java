@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -99,12 +100,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(Long userid, String token, UpdateDto updateDto) throws Exception { // 프론트에서 변경안해도 기본값 불러주기
+    public void updateUser(Long userid, String token, UpdateDto updateDto, MultipartFile multipartFile) throws Exception { // 프론트에서 변경안해도 기본값 불러주기
         if(jwtTokenProvider.vaildateToken(token)) {
             User user = userRepository.findByUserid(userid).get();
             user.setNickname(updateDto.getNickname());
             user.setOneline(updateDto.getOneline());
             user.setPhone(updateDto.getPhone());
+
+            if(multipartFile != null) {
+
+            }
             userRepository.save(user);
         }
     }

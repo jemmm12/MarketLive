@@ -13,3 +13,7 @@ spring:
     hibernate:
       format_sql : true
       ddl-auto: update
+
+custom:
+  path:
+    uploadurl: "//app/users/thumnails/"
