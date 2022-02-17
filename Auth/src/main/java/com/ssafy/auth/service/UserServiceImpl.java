@@ -136,8 +136,9 @@ public class UserServiceImpl implements UserService {
             file = new File(path);
             user.setThumnailroot(path);
 
-            multipartFile.transferTo(file);
             userRepository.save(user);
+            multipartFile.transferTo(file);
+
         }
     }
 
