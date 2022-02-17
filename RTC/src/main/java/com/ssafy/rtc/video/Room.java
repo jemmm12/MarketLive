@@ -88,32 +88,21 @@ public class Room {
         });
     }
 
-    public void iceCandidate(JsonObject jsonMessage, WebSocketSession session) throws Exception{
-        try {
-            JsonObject candidate = jsonMessage.get("candidate").getAsJsonObject();
-            UserSession user = null;
-            if (broadCaster != null) {
-                if (broadCaster.getSession() == session) {
-                    user = broadCaster;
-                } else {
-                    user = viewers.get(session.getId());
-                }
+    public void iceCandidate(JsonObject jsonMessage, WebSocketSession session) {
+        JsonObject candidate = jsonMessage.get("candidate").getAsJsonObject();
+        UserSession user = null;
+        if (broadCaster != null) {
+            if (broadCaster.getSession() == session) {
+                user = broadCaster;
+            } else {
+                user = viewers.get(session.getId());
             }
-            if (user != null) {
-                IceCandidate cand =
-                        new IceCandidate(candidate.get("candidate").getAsString(), candidate.get("sdpMid")
-                                .getAsString(), candidate.get("sdpMLineIndex").getAsInt());
-                user.addCandidate(cand);
-            }
-        }catch (Throwable t) {
-            JsonObject response = new JsonObject();
-            response.addProperty(ResponseKeys.ID.toString(), "candidateResponse");
-            response.addProperty("detailMessage", "candidate 오류 발생");
-            if (t != null) {
-                response.addProperty(ResponseKeys.MESSAGE.toString(), t.getMessage());
-            }
-            session.sendMessage(new TextMessage(response.toString()));
-            return;
+        }
+        if (user != null) {
+            IceCandidate cand =
+                    new IceCandidate(candidate.get("candidate").getAsString(), candidate.get("sdpMid")
+                            .getAsString(), candidate.get("sdpMLineIndex").getAsInt());
+            user.addCandidate(cand);
         }
     }
 

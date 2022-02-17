@@ -65,7 +65,7 @@ public class RtcHandler extends TextWebSocketHandler {
         roomManager.enterRoom(broadCasterUserId, jsonMessage, session);
     }
 
-    private void candidate(JsonObject jsonMessage, WebSocketSession session) throws Exception{
+    private void candidate(JsonObject jsonMessage, WebSocketSession session) {
         final String broadCasterUserId = jsonMessage.get(ResponseKeys.ROOMID.toString()).getAsString();
         roomManager.iceCandidate(broadCasterUserId, jsonMessage, session);
     }

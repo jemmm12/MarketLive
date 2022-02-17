@@ -76,7 +76,7 @@ public class RoomManager {
         broadViewerIdByViewerSid.put(session.getId(), broadCasterUserId + ":" + viewerUserId);
     }
 
-    public void iceCandidate(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) throws Exception{
+    public void iceCandidate(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) {
         Room room = roomsByBid.get(broadCasterUserId);
         room.iceCandidate(jsonMessage, session);
     }
@@ -105,17 +105,8 @@ public class RoomManager {
                 broadCasterUserId = broadIdByBroadSid.get(session.getId());  //broadcaster id 안 가지고 오는 버그 수정
                 room = roomsBySession.get(session.getId());
             }
-            
-            // id 보내기
-            JsonObject response = new JsonObject();
-            response.addProperty(ResponseKeys.ID.toString(), "멈췄음");
-            response.addProperty("broadCasterUserId", broadCasterUserId);
-            response.addProperty("viewerUserId",viewerUserId);
-            session.sendMessage(new TextMessage(response.toString()));
-            
-            
         }catch(Throwable t) {
-            handleErrorResponse(t, "find id failed", session, "stopResponse");
+            //handleErrorResponse(t, "find id failed", session, "stopResponse");
             return;
         }
         // redis에서 정보 삭제하기
@@ -152,7 +143,9 @@ public class RoomManager {
                 errorMessage = room.stop(session);
             }
         }catch (Throwable t) {
-            handleErrorResponse(t, "방 중지(stop) 중 오류 발생", session, "stopResponse");
+            if(session != null) {
+                //handleErrorResponse(t, "방 중지(stop) 중 오류 발생", session, "stopResponse");
+            }
             return;
         }
 
@@ -177,14 +170,14 @@ public class RoomManager {
                     }
                     break;
                 case "error":
-                    handleErrorResponse(null, "broad, viewer 정보가 없음", session, "stopResponse");
+                    //handleErrorResponse(null, "broad, viewer 정보가 없음", session, "stopResponse");
                     break;
                 default:    // viewer
                     broadViewerIdByViewerSid.remove(session.getId());
                     break;
             }
         } catch (Throwable t) {
-            handleErrorResponse(t, "방 삭제중 오류 발생", session, "stopResponse");
+            //handleErrorResponse(t, "방 삭제중 오류 발생", session, "stopResponse");
             return;
         }
     }
