@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
 
             if(multipartFile != null || !multipartFile.isEmpty()) {
                 String path = uploadUrl + userid;
-                File file = new File(path);
+                //File file = new File(path);
                 String contentType = multipartFile.getContentType();
                 String extension = null;
 
@@ -122,6 +122,7 @@ public class UserServiceImpl implements UserService {
                 else if(contentType.contains("gif")) extension = ".gif";
 
                 user.setThumnailroot("/static/thumbnails/" + userid);
+                File file = new File(path + extension);
                 multipartFile.transferTo(file);
             }
             userRepository.save(user);
