@@ -96,8 +96,8 @@ public class UserController {
         return new ResponseEntity<>("회원수정 완료.", HttpStatus.OK);
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadThumbnail(long userid, MultipartFile multipartFile) {
+    @PostMapping("/upload") // 프로필 사진 수정
+    public ResponseEntity<String> uploadThumbnail(@RequestParam long userid, MultipartFile multipartFile) {
         try {
             userService.updateThumbnail(userid, multipartFile);
         }
