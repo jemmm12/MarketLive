@@ -122,8 +122,15 @@ public class RoomManager {
     }
 
     private void deleteRoomInfo(Room room, WebSocketSession session, String broadCasterUserId) throws IOException {
+        String errorMessage = "";
         try {
-            switch (room.stop(session)) {
+            errorMessage = room.stop(session);
+        }catch (Throwable t) {
+            handleErrorResponse(t, "방 중지(stop) 중 오류 발생", session, "stopResponse");
+        }
+        
+        try {
+            switch (errorMessage) {
                 case "broadcaster":
                     roomsByBid.remove(broadCasterUserId);
                     roomsBySession.remove(session.getId());
