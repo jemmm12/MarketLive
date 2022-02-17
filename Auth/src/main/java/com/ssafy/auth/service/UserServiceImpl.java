@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
             else if(contentType.contains("png")) extension = ".png";
             else if(contentType.contains("gif")) extension = ".gif";
 
-            path = path + userid + extension;
+            path = path + "/" + userid + extension;
             file = new File(path);
 
             String rootPath = "";
