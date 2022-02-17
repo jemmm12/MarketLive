@@ -285,7 +285,7 @@ function MyPageEdit() {
                             onChange={onImageChange}
                             style={{display:"none"}}
                         />
-                        {(chosenImage !== '../img/user.png') ? (
+                        {/* {(chosenImage !== '../img/user.png') ? (
                             <Button 
                                 // variant="secondary" 
                                 variant="outline-secondary"
@@ -293,7 +293,7 @@ function MyPageEdit() {
                                 className='ms-1'
                                 onClick={imageCancel}
                             >지우기</Button>
-                         ) : null}
+                         ) : null} */}
                         
                     </div>
                     {/* <h2 className='mt-auto ms-2'> 
