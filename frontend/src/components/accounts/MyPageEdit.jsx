@@ -155,7 +155,7 @@ function MyPageEdit() {
                 'content-type': 'multipart/form-data',
             },
             method:"post",
-            url: `/user/upload?userid+${inputs.userid}`,
+            url: `/user/upload?userid=${inputs.userid}`,
             // url: 'https://i6c110.p.ssafy.io:8110/user/upload?userid=12',
             data: formData,
         })

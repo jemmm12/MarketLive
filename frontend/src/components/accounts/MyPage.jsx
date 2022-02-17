@@ -84,7 +84,14 @@ function MyPage() {
                     <h2 className='fw-bold ms-1'>마이페이지</h2>
                 </div>
                 <div className='mt-4 d-flex ms-1'>
-                    <img src="../img/user.png" alt="" style={{width:"80px"}}/>
+                {inputs.thumnailroot ? (
+                <img
+                    src={"/user/thumbnail/" + inputs.userid}
+                    alt=""
+                    style={{ width: "80px" }}
+                />) : (
+                <img src="../img/user.png" alt="" style={{ width: "80px" }} />
+                )}
                     <h2 className='mt-auto ms-2'> 
                         <span className='fw-bold'>{inputs.nickname}</span> 님
                     </h2>
