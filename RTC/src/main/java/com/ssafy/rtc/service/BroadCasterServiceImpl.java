@@ -24,27 +24,27 @@ public class BroadCasterServiceImpl implements BroadCasterService {
 
     @Override
     public void createRoom(RoomDto roomDto, MultipartFile multipartFile) throws Exception{
-        if(!multipartFile.isEmpty()) { // && !multipartFile.isEmpty()
-            //String path = new ClassPathResource("/static").getFile().getAbsolutePath() + "\\thumbnails"; // 로컬 확인용
-            String path = "/broad";
-            String contentType = multipartFile.getContentType();
-            File file = new File(path);
-            String extension = null;
-
-            if(!file.exists()){
-                file.mkdirs();
-            }
-
-            if(contentType.contains("jpeg") || contentType.contains("jpg")) extension = ".jpg";
-            else if(contentType.contains("png")) extension = ".png";
-            else if(contentType.contains("gif")) extension = ".gif";
-
-            path = path + "/" + roomDto.getUserid() + extension; // 로컬 확인용
-            file = new File(path);
-            roomDto.setThumbnail(path);
-
-            multipartFile.transferTo(file);
-        }
+//        if(!multipartFile.isEmpty()) { // && !multipartFile.isEmpty()
+//            //String path = new ClassPathResource("/static").getFile().getAbsolutePath() + "\\thumbnails"; // 로컬 확인용
+//            String path = "/broad";
+//            String contentType = multipartFile.getContentType();
+//            File file = new File(path);
+//            String extension = null;
+//
+//            if(!file.exists()){
+//                file.mkdirs();
+//            }
+//
+//            if(contentType.contains("jpeg") || contentType.contains("jpg")) extension = ".jpg";
+//            else if(contentType.contains("png")) extension = ".png";
+//            else if(contentType.contains("gif")) extension = ".gif";
+//
+//            path = path + "/" + roomDto.getUserid() + extension; // 로컬 확인용
+//            file = new File(path);
+//            roomDto.setThumbnail(path);
+//
+//            multipartFile.transferTo(file);
+//        }
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         String KEY = GlobalFunctions.generateRoomInfoKey(roomDto.getUserid());
         hashOperations.putAll(KEY, roomDtoToMap(roomDto));
