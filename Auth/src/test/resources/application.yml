@@ -1,5 +1,14 @@
 server:
   port: 8110
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:keystore/keystore.p12
+    key-store-password: /.,/.,c110
+
+trust:
+  store: classpath:keystore/keystore.p12
+  password: /.,/.,c110
 
 spring:
   datasource:
@@ -13,3 +22,7 @@ spring:
     hibernate:
       format_sql : true
       ddl-auto: update
+
+custom:
+  path:
+    uploadUrl: "//app/users/thumbnails/"

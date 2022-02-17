@@ -8,10 +8,13 @@ import com.ssafy.auth.entity.User;
 import com.ssafy.auth.repository.UserRepository;
 import com.ssafy.auth.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final String uploadUrl = "//app/users/thumbnails/";
 
     @Override
     public String saveUser(SignupDto signupDto) {
@@ -105,6 +110,32 @@ public class UserServiceImpl implements UserService {
             user.setNickname(updateDto.getNickname());
             user.setOneline(updateDto.getOneline());
             user.setPhone(updateDto.getPhone());
+            userRepository.save(user);
+        }
+    }
+
+    @Override
+    public void updateThumbnail(Long userid, MultipartFile multipartFile) throws Exception {
+        User user = userRepository.findByUserid(userid).get();
+        if(multipartFile != null && !multipartFile.isEmpty()) {
+            String path = "/static/thumbnails/" + userid;
+            String contentType = multipartFile.getContentType();
+            File file = new File(path);
+            String extension = null;
+
+            if(!file.exists()){
+                file.mkdirs();
+            }
+
+            if(contentType.contains("jpeg") || contentType.contains("jpg")) extension = ".jpg";
+            else if(contentType.contains("png")) extension = ".png";
+            else if(contentType.contains("gif")) extension = ".gif";
+
+            path += extension;
+            file = new File(path);
+            user.setThumnailroot(path);
+
+            multipartFile.transferTo(file);
             userRepository.save(user);
         }
     }
