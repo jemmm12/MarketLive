@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
             user.setOneline(updateDto.getOneline());
             user.setPhone(updateDto.getPhone());
 
-            if(multipartFile != null || multipartFile.isEmpty()) {
+            if(multipartFile != null || !multipartFile.isEmpty()) {
                 String path = uploadUrl + userid;
                 File file = new File(path);
                 String contentType = multipartFile.getContentType();

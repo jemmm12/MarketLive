@@ -10,7 +10,6 @@ trust:
   store: classpath:keystore/keystore.p12
   password: /.,/.,c110
 
-
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

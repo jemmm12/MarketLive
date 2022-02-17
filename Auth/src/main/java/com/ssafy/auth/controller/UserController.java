@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping(path = "/user")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class UserController {
 
     private final UserService userService;
