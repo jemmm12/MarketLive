@@ -363,6 +363,7 @@ function Broad() {
             id: 'stop'
         }
         sendMessage(message);
+        console.log('stop 메세지 보내기')
         dispose();
     }
 
@@ -370,6 +371,7 @@ function Broad() {
         if (webRtcPeer) {
             webRtcPeer.dispose();
             webRtcPeer = null;
+            console.log('피어 없애기')
         }
         // hideSpinner(video);
 
@@ -485,6 +487,10 @@ function Broad() {
     //       setChatting("");
     //   }
     // }
+    return () => {
+      console.log('언마운트')
+      stop()
+    }
 
   },[])
 
