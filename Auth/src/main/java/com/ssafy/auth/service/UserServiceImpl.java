@@ -119,7 +119,8 @@ public class UserServiceImpl implements UserService {
     public void updateThumbnail(Long userid, MultipartFile multipartFile) throws Exception {
         User user = userRepository.findByUserid(userid).get();
         if(!multipartFile.isEmpty()) { // && !multipartFile.isEmpty()
-            String path = new ClassPathResource("/static").getFile().getAbsolutePath() + "\\thumbnails";
+            //String path = new ClassPathResource("/static").getFile().getAbsolutePath() + "\\thumbnails";
+            String path = "//app";
             String contentType = multipartFile.getContentType();
             File file = new File(path);
             String extension = null;
