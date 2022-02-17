@@ -22,7 +22,7 @@ public class BroadCasterController {
 
     @ApiOperation(value = "방 생성", notes = "BroadCaster가 방을 새로 만든다.", response = String.class)
     @PostMapping("/create-room")
-    public ResponseEntity<String> createRoom(@RequestParam("files") MultipartFile multipartFile, @RequestBody @ApiParam(value = "방 정보", required = true) RoomDto roomDto) {
+    public ResponseEntity<String> createRoom(@RequestBody @ApiParam(value = "방 정보", required = true) RoomDto roomDto, @RequestParam MultipartFile multipartFile) {
         try {
 //            String origFilename = files.getOriginalFilename();
 //            String filename = new MD5Generator(origFilename).toString();
