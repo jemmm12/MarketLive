@@ -26,4 +26,4 @@ spring:
 
 custom:
   path:
-    uploadurl: "//app/users/thumnails/"
+    uploadUrl: "//app/users/thumbnails/"
