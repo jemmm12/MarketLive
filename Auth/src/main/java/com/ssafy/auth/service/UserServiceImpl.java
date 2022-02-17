@@ -26,8 +26,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Value("${custom.path.uploadUrl}")
-    private final String uploadUrl;
+    private final String uploadUrl = "//app/users/thumbnails/";
 
     @Override
     public String saveUser(SignupDto signupDto) {
