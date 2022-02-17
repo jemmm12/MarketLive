@@ -42,7 +42,7 @@ public class UserController {
     @GetMapping(path = "/checkemail") // 이메일 중복체크
     public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
         try {
-            if(userService.isduplicatedEmail(email)) return new ResponseEntity<>( false, HttpStatus.CONFLICT);
+            if(userService.isDuplicatedEmail(email)) return new ResponseEntity<>( false, HttpStatus.CONFLICT);
             else return new ResponseEntity<>(true, HttpStatus.OK);
         }
         catch (Exception e) {
@@ -53,7 +53,7 @@ public class UserController {
     @GetMapping(path = "/checknickname") // 닉네임 중복체크
     public ResponseEntity<Boolean> checkNickname(@RequestParam String nickname) {
         try {
-            if(userService.isduplicatedNickname(nickname)) return new ResponseEntity<>( false, HttpStatus.CONFLICT);
+            if(userService.isDuplicatedNickname(nickname)) return new ResponseEntity<>( false, HttpStatus.CONFLICT);
             else return new ResponseEntity<>(true, HttpStatus.OK);
         }
         catch (Exception e) {
