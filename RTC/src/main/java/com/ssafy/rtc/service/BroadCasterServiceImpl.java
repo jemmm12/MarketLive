@@ -1,18 +1,17 @@
 package com.ssafy.rtc.service;
 
-import com.google.common.collect.Lists;
 import com.ssafy.rtc.dto.RoomDto;
 import com.ssafy.rtc.util.GlobalConstants;
 import com.ssafy.rtc.util.GlobalFunctions;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.connection.RedisConnection;
-import org.springframework.data.redis.core.*;
+import org.apache.commons.io.IOUtils;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.io.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -21,14 +20,65 @@ public class BroadCasterServiceImpl implements BroadCasterService {
 
     private final StringRedisTemplate redisTemplate;
 
+    private final String uploadUrl = "classpath:static/thumbnails/";
+
     @Override
-    public void createRoom(RoomDto roomDto) {
+    public void createRoom(RoomDto roomDto, MultipartFile multipartFile) {
         // TODO: 사진 저장 추가
 
+        if(!multipartFile.isEmpty()) { // && !multipartFile.isEmpty()
+            //String path = new ClassPathResource("/static").getFile().getAbsolutePath() + "\\thumbnails"; // 로컬 확인용
+            String path = "/broad";
+            String contentType = multipartFile.getContentType();
+            File file = new File(path);
+            String extension = null;
+
+            if(!file.exists()){
+                file.mkdirs();
+            }
+
+            if(contentType.contains("jpeg") || contentType.contains("jpg")) extension = ".jpg";
+            else if(contentType.contains("png")) extension = ".png";
+            else if(contentType.contains("gif")) extension = ".gif";
+
+            path = path + "/" + roomDto.getUserid() + extension; // 로컬 확인용
+            file = new File(path);
+            roomDto.setThumbnail(path);
+
+            try {
+                multipartFile.transferTo(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         String KEY = GlobalFunctions.generateRoomInfoKey(roomDto.getUserid());
         hashOperations.putAll(KEY, roomDtoToMap(roomDto));
     }
+
+    @Override
+    public byte[] getThumbnail(Long userid) {
+        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        RoomDto roomDto = GlobalFunctions.getRoomDto(userid, hashOperations);
+
+        String path = roomDto.getThumbnail();
+        System.out.println(path);
+
+        if(roomDto.getThumbnail() != null) {
+            try {
+                InputStream imageStream = new FileInputStream(path);
+                byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+                imageStream.close();
+                return imageByteArray;
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return new byte[0];
+    }
+
 
     @Override
     public void modifyRoom(RoomDto roomDto) {
