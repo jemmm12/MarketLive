@@ -5,6 +5,10 @@ server:
     key-store-type: PKCS12
     key-store: classpath:keystore/keystore.p12
     key-store-password: /.,/.,c110
+  servlet:
+    multipart:
+      maxFileSize: 30MB
+      maxRequestSize: 150MB
 
 trust:
   store: classpath:keystore/keystore.p12
