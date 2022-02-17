@@ -39,6 +39,13 @@ public class RoomManager {
             return;
         }
         Room room = null;
+        JsonObject response = new JsonObject();
+        response.addProperty(ResponseKeys.ID.toString(), "방만들기 전");
+        response.addProperty("broadCasterUserId", broadCasterUserId);
+        synchronized (session) {
+            session.sendMessage(new TextMessage(response.toString()));
+        }
+
         try {
             room = new Room(broadCasterUserId, kurento.createMediaPipeline());
             room.initRoom(jsonMessage, session);
@@ -141,7 +148,9 @@ public class RoomManager {
     private synchronized void deleteRoomInfo(Room room, WebSocketSession session, String broadCasterUserId) throws IOException {
         String errorMessage = "";
         try {
-            errorMessage = room.stop(session);
+            if(room != null) {
+                errorMessage = room.stop(session);
+            }
         }catch (Throwable t) {
             handleErrorResponse(t, "방 중지(stop) 중 오류 발생", session, "stopResponse");
             return;
