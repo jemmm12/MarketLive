@@ -8,9 +8,11 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +25,8 @@ public class BroadCasterServiceImpl implements BroadCasterService {
     private final String uploadUrl = "classpath:static/thumbnails/";
 
     @Override
-    public void createRoom(RoomDto roomDto, MultipartFile multipartFile) throws Exception{
+    //public void createRoom(RoomDto roomDto, MultipartFile multipartFile) throws Exception{
+        public void createRoom(RoomDto roomDto) throws Exception{
 //        if(!multipartFile.isEmpty()) { // && !multipartFile.isEmpty()
 //            //String path = new ClassPathResource("/static").getFile().getAbsolutePath() + "\\thumbnails"; // 로컬 확인용
 //            String path = "/broad";

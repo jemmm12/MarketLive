@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "/broad")
@@ -22,7 +21,8 @@ public class BroadCasterController {
 
     @ApiOperation(value = "방 생성", notes = "BroadCaster가 방을 새로 만든다.", response = String.class)
     @PostMapping("/create-room")
-    public ResponseEntity<String> createRoom(@RequestBody @ApiParam(value = "방 정보", required = true) RoomDto roomDto, @RequestParam MultipartFile multipartFile) {
+    //public ResponseEntity<String> createRoom(@RequestBody @ApiParam(value = "방 정보", required = true) RoomDto roomDto, @RequestParam MultipartFile multipartFile) {
+    public ResponseEntity<String> createRoom(@RequestBody @ApiParam(value = "방 정보", required = true) RoomDto roomDto) {
         try {
 //            String origFilename = files.getOriginalFilename();
 //            String filename = new MD5Generator(origFilename).toString();
@@ -40,7 +40,9 @@ public class BroadCasterController {
 //            String filePath = savePath + "\\" + filename;
 //            files.transferTo(new File(filePath));
 //            roomDto.setThumbnail(filePath);
-            broadCasterService.createRoom(roomDto, multipartFile);
+
+            //broadCasterService.createRoom(roomDto, multipartFile);
+            broadCasterService.createRoom(roomDto);
         } catch (Exception e) {
             return new ResponseEntity<>("create room failed", HttpStatus.BAD_REQUEST);
         }
