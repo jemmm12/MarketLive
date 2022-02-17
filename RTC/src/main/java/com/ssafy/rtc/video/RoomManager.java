@@ -37,27 +37,33 @@ public class RoomManager {
             handleErrorResponse(null, "Another user is currently acting as sender. Try again later ...", session, "presenterResponse");
             return;
         }
+        Room room = null;
         try {
-            Room room = new Room(broadCasterUserId, kurento.createMediaPipeline());
+            room = new Room(broadCasterUserId, kurento.createMediaPipeline());
             room.initRoom(jsonMessage, session);
-            roomsByBid.put(broadCasterUserId, room);
-            roomsBySession.put(session.getId(), room);
-            broadIdByBroadSid.put(session.getId(), broadCasterUserId);
         } catch (Throwable t) {
-            handleErrorResponse(t, null, session, "presenterResponse");
+            handleErrorResponse(t, "initializing room failed", session, "presenterResponse");
             return;
         }
+        roomsByBid.put(broadCasterUserId, room);
+        roomsBySession.put(session.getId(), room);
+        broadIdByBroadSid.put(session.getId(), broadCasterUserId);
     }
 
     public void enterRoom(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) throws IOException {
+        Room room = null;
         try {
-            Room room = roomsByBid.get(broadCasterUserId);
-            room.enterRoom(jsonMessage, session);
-            String viewerUserId = jsonMessage.get(ResponseKeys.USERID.toString()).getAsString();
-            broadViewerIdByViewerSid.put(session.getId(), broadCasterUserId + ":" + viewerUserId);
+            room = roomsByBid.get(broadCasterUserId);
         } catch (Throwable t) {
-            handleErrorResponse(t, "", session, "viewerResponse");
+            handleErrorResponse(t, "get broadcaster's room failed", session, "viewerResponse");
         }
+        try {
+            room.enterRoom(jsonMessage, session);
+        } catch (Throwable t) {
+            handleErrorResponse(t, "enterring broadcaster's room failed", session, "viewerResponse");
+        }
+        String viewerUserId = jsonMessage.get(ResponseKeys.USERID.toString()).getAsString();
+        broadViewerIdByViewerSid.put(session.getId(), broadCasterUserId + ":" + viewerUserId);
     }
 
     public void iceCandidate(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) {
@@ -66,11 +72,11 @@ public class RoomManager {
     }
 
     public void sendMessage(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) throws IOException {
-        try{
+        try {
             Room room = roomsByBid.get(broadCasterUserId);
             room.sendMessage(jsonMessage, session);
-        }catch (Throwable t) {
-            handleErrorResponse(t, "", session, "viewerResponse");
+        } catch (Throwable t) {
+            handleErrorResponse(t, "sending message failed", session, "viewerResponse");
         }
     }
 
@@ -99,18 +105,17 @@ public class RoomManager {
         SetOperations<String, String> setOperations = redisTemplate.opsForSet();
         String VIEWERS_KEY = GlobalFunctions.generateRoomViewersKey(Long.parseLong(broadCasterUserId));
         if (viewerUserId != null) {   // viewer
-            if(setOperations.isMember(VIEWERS_KEY, viewerUserId))
-            {
+            if (setOperations.isMember(VIEWERS_KEY, viewerUserId)) {
                 setOperations.remove(VIEWERS_KEY, viewerUserId);
             }
         } else {  //broadcaster
             // set 삭제
-            if(redisTemplate.hasKey(VIEWERS_KEY)) {
+            if (redisTemplate.hasKey(VIEWERS_KEY)) {
                 redisTemplate.delete(VIEWERS_KEY);
             }
             // room 삭제
             String ROOMINFO_KEY = GlobalFunctions.generateRoomInfoKey(Long.parseLong(broadCasterUserId));
-            if(redisTemplate.hasKey(ROOMINFO_KEY)) {
+            if (redisTemplate.hasKey(ROOMINFO_KEY)) {
                 redisTemplate.delete(ROOMINFO_KEY);
             }
         }
@@ -151,8 +156,9 @@ public class RoomManager {
         response.addProperty(ResponseKeys.RESPONSE.toString(), "rejected");
         if (throwable != null) {
             response.addProperty(ResponseKeys.MESSAGE.toString(), throwable.getMessage());
-        } else {
-            response.addProperty(ResponseKeys.MESSAGE.toString(), message);
+        }
+        if (message != null) {
+            response.addProperty("detailMessage", message);
         }
         session.sendMessage(new TextMessage(response.toString()));
     }
