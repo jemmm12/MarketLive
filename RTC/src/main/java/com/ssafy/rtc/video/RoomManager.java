@@ -137,13 +137,14 @@ public class RoomManager {
                     }
                     break;
                 case "error":
-                    throw new IOException();
+                    handleErrorResponse(null, "broad, viewer 정보가 없음", session, "stopResponse");
+                    break;
                 default:    // viewer
                     broadViewerIdByViewerSid.remove(session.getId());
                     break;
             }
         } catch (Throwable t) {
-            handleErrorResponse(t, "", session, "stopResponse");
+            handleErrorResponse(t, "방 삭제중 오류 발생", session, "stopResponse");
         }
     }
 
