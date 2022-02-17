@@ -118,7 +118,6 @@ public class UserServiceImpl implements UserService {
     public void updateThumbnail(Long userid, MultipartFile multipartFile) throws Exception {
         User user = userRepository.findByUserid(userid).get();
         if(multipartFile != null && !multipartFile.isEmpty()) {
-            String path = uploadUrl + userid;
             String contentType = multipartFile.getContentType();
             String extension = null;
 
@@ -126,8 +125,9 @@ public class UserServiceImpl implements UserService {
             else if(contentType.contains("png")) extension = ".png";
             else if(contentType.contains("gif")) extension = ".gif";
 
-            user.setThumnailroot("/static/thumbnails/" + userid + extension);
-            File file = new File(path + extension);
+            String path = "/static/thumbnails/" + userid + extension;
+            user.setThumnailroot(path);
+            File file = new File(path);
             multipartFile.transferTo(file);
             userRepository.save(user);
         }
