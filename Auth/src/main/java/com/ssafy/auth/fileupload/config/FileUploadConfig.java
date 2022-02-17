@@ -16,7 +16,7 @@ public class FileUploadConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers (ResourceHandlerRegistry resourceHandlerRegistry) {
-        resourceHandlerRegistry.addResourceHandler("/static/thumbnails/**")
+        resourceHandlerRegistry.addResourceHandler("classpath:static/thumbnails/**")
                 .addResourceLocations("file:///" + uploadUrl);
     }
 

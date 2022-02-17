@@ -107,6 +107,17 @@ public class UserController {
         return new ResponseEntity<>("Profile thumbnail update complete", HttpStatus.OK);
     }
 
+    @GetMapping("/thumbnail/{userid}") // 유저 썸네일 요청
+    public ResponseEntity<byte []> getProfile(@PathVariable long userid) {
+        try {
+            userService.getThumbnail(userid);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping("/mypage") // 마이페이지
     public ResponseEntity<MyPageDto> mypageUser(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken) {
         String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.

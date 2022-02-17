@@ -8,14 +8,15 @@ import com.ssafy.auth.entity.User;
 import com.ssafy.auth.repository.UserRepository;
 import com.ssafy.auth.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
+import org.apache.commons.io.IOUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final String uploadUrl = "//app/users/thumbnails/";
+    private final String uploadUrl = "classpath:static/thumbnails/";
 
     @Override
     public String saveUser(SignupDto signupDto) {
@@ -135,13 +136,24 @@ public class UserServiceImpl implements UserService {
 
             path = path + "/" + userid + extension;
             file = new File(path);
-
-            String rootPath = "";
             user.setThumnailroot(path);
 
             multipartFile.transferTo(file);
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public byte[] getThumbnail(Long userid) throws Exception {
+        User user = userRepository.findByUserid(userid).get();
+        String path = user.getThumnailroot();
+        if(user.getThumnailroot() != null) {
+            InputStream imageStream = new FileInputStream(path);
+            byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+            imageStream.close();
+            return imageByteArray;
+        }
+        return new byte[0];
     }
 
     @Override 
