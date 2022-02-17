@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -82,7 +83,7 @@ public class UserController {
     }
 
     @PostMapping("/update") // 정보수정
-    public ResponseEntity<String> updateUser(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken, @RequestBody UpdateDto updateDto ) {
+    public ResponseEntity<String> updateUser(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken, @RequestBody UpdateDto updateDto) {
         String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
         DecodedJWT decodedJWT = JWT.decode(token); //디코딩
         Long userid = Long.parseLong(decodedJWT.getSubject()); //pk 뽑아오기
@@ -93,6 +94,17 @@ public class UserController {
             return new ResponseEntity<>("로그인 유효 시간이 지났습니다.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("회원수정 완료.", HttpStatus.OK);
+    }
+
+    @PostMapping("/upload") // 프로필 사진 수정
+    public ResponseEntity<String> uploadThumbnail(@RequestParam long userid, @RequestParam MultipartFile multipartFile) {
+        try {
+            userService.updateThumbnail(userid, multipartFile);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("The path could not be found", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("Profile thumbnail update complete", HttpStatus.OK);
     }
 
     @GetMapping("/mypage") // 마이페이지
