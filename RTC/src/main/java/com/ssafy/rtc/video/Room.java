@@ -132,11 +132,11 @@ public class Room {
             broadCaster = null;
             return "broadcaster";
         } else if (viewers.containsKey(sessionId)) {
-            chatHelper.exitRoomMessage(sessionId);
             if (viewers.get(sessionId).getWebRtcEndpoint() != null) {
                 viewers.get(sessionId).getWebRtcEndpoint().release();
             }
             viewers.remove(sessionId);
+            chatHelper.exitRoomMessage(sessionId);  //서순
             return "viewer";
         }
         return "error";
