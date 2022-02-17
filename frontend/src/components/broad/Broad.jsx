@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 import $ from 'jquery'
 // import { kurentoUtils } from './kurento-utils.js'
 import { WebRtcPeer } from 'kurento-utils';
+import { useBeforeunload } from "react-beforeunload";
 
 
 function Broad() {
@@ -13,6 +14,9 @@ function Broad() {
   const [broadNickname, setBroadNickname] = useState('')
   const [broadTitle, setBroadTitle] = useState('')
   const [thumbnail, setThumbnail] = useState('')
+  const [ws_, setWs_] = useState('')
+  const [chat, setChat] = useState('')
+  // console.log(ws_,'-------------------------')
 
 
   
@@ -35,7 +39,10 @@ function Broad() {
   };
 
   const sendMessage_ = (message) => {
+    console.log(message)
     setMessages(messages.concat(message));
+    console.log(messages)
+    console.log(message)
   };
 
   useEffect(() => {
@@ -168,6 +175,7 @@ function Broad() {
     // setTimeout(function () {
     var myurl = 'i6c110.p.ssafy.io:8113'
     var ws = new WebSocket('wss://' + myurl + '/i6c110');
+    setWs_(ws)
     // var ws = new WebSocket('https://i6c110.p.ssafy.io:8443/i6c110')
     var video = document.getElementById('video');
     var webRtcPeer;
@@ -239,6 +247,9 @@ function Broad() {
                 break;
             case 'stopCommunication':
                 dispose();
+                break;
+            case 'message':
+                printMessage(parsedMessage);
                 break;
             default:
                 console.error('Unrecognized message', parsedMessage);
@@ -490,13 +501,51 @@ function Broad() {
     return () => {
       console.log('언마운트')
       stop()
+      // window.open("/", "_blank");
     }
 
   },[])
 
-  // const sendMessage_ = (message) => {
-  //   setMessages(messages.concat(message));
-  // };
+
+  // 채팅
+
+
+  function printMessage(fullmessage){
+    var message = fullmessage.message;
+    console.log(message)
+    // sendMessage_(String(message))
+    sendMessage_(String('123'))
+    // setMessages(messages.concat(message));
+    $("#messageWindow").html($("#messageWindow").html()
+        + "<p class='chat_content'><b class='impress'>" + message + "</b></p>");
+  }
+
+  function sendMessage(message) {
+    var jsonMessage = JSON.stringify(message);
+    console.log('Sending message: ' + jsonMessage);
+    ws_.send(jsonMessage);
+  }
+
+
+  //     엔터키를 통해 send함
+  const enterkey = (e) => {
+      if (e.key === "Enter" && chat !== "") {
+          var message = chat
+          var jsonMessage = {
+              id: 'message',
+              roomid: broadid,
+              message: message
+          };
+          setChat('')
+          e.target.value = "";
+          sendMessage(jsonMessage);
+        }
+      }
+  
+  const onChat = (e) => {
+    setChat(e.target.value);
+  };
+
 
   
 
@@ -533,7 +582,7 @@ function Broad() {
           <div className="d-flex mb-2">
             {/* 이미지, 방송제목, 닉네임 */}
             <img
-              src="https://i6c110.p.ssafy.io/img/user.png"
+              src={"/user/thumbnail/" + broadid}
               alt=""
               style={{ width: "50px", height: "50px", cursor: "pointer" }}
               className="ms-1"
@@ -574,7 +623,18 @@ function Broad() {
                   방송 종료
                 </Button>
               </div>
-            ) : null}
+            ) : (
+            <div className="ms-auto me-1">
+              <Button 
+                  className="ms-2" 
+                  variant="secondary" 
+                  size="sm" 
+                  onClick={onHome}  
+                >
+                  방송 나가기
+                </Button>
+            </div>
+            )}
           </div>
         </div>
 
@@ -587,8 +647,8 @@ function Broad() {
             position: "relative",
             minHeight: "400px",
             width: "400px",
-            // height: "400px",
-            height: "auto",
+            height: "400px",
+            // height: "100%",
             overflow: "auto",
           }}
 
@@ -596,11 +656,18 @@ function Broad() {
           <div style={{ position: "sticky", top: 0, backgroundColor: "white" }}>
             채팅창
           </div>
-          <div>{messageList}</div>
+          {/* <div>{messageList}</div> */}
+          <div id="_chatbox">
+            <fieldset>
+              <div id="messageWindow"></div>
+            </fieldset>
+				  </div>
           <input
             placeholder="채팅을 입력해주세요"
-            onChange={onChange}
-            onKeyPress={onKeyPress}
+            // onChange={onChange}
+            // onKeyPress={onKeyPress}
+            onChange={onChat} 
+            onKeyPress={enterkey}
             style={{
               position: "sticky",
               width: "100%",
@@ -616,13 +683,13 @@ function Broad() {
         </div>
 
         {/* 채팅 테스트 */}
-        {/* <div id="_chatbox"> */}
-					{/* <fieldset> */}
-						{/* <div id="messageWindow"></div> */}
-						{/* <input id="chatInput" type="text" onKeyPress={enterkey} onChange={onChat} /> */}
-						{/* <input type="submit" value="send" onClick={send} /> */}
-					{/* </fieldset> */}
-				{/* </div> */}
+        {/* <div id="_chatbox">
+					<fieldset>
+						<div id="messageWindow"></div>
+						<br/> <input id="inputMessage" onChange={onChat} type="text" onKeyPress={enterkey}/>
+						<input type="submit" value="send" onclick="send()"/>
+					</fieldset>
+				</div> */}
 
 
 
