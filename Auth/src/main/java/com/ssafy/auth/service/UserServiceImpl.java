@@ -104,27 +104,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(Long userid, String token, UpdateDto updateDto, MultipartFile multipartFile) throws Exception { // 프론트에서 변경안해도 기본값 불러주기
+    public void updateUser(Long userid, String token, UpdateDto updateDto) throws Exception { // 프론트에서 변경안해도 기본값 불러주기
         if(jwtTokenProvider.vaildateToken(token)) {
             User user = userRepository.findByUserid(userid).get();
             user.setNickname(updateDto.getNickname());
             user.setOneline(updateDto.getOneline());
             user.setPhone(updateDto.getPhone());
+            userRepository.save(user);
+        }
+    }
 
-            if(multipartFile != null || !multipartFile.isEmpty()) {
-                String path = uploadUrl + userid;
-                //File file = new File(path);
-                String contentType = multipartFile.getContentType();
-                String extension = null;
+    @Override
+    public void updateThumbnail(Long userid, MultipartFile multipartFile) throws Exception {
+        User user = userRepository.findByUserid(userid).get();
+        if(multipartFile != null || !multipartFile.isEmpty()) {
+            String path = uploadUrl + userid;
+            String contentType = multipartFile.getContentType();
+            String extension = null;
 
-                if(contentType.contains("jpeg") || contentType.contains("jpg")) extension = ".jpg";
-                else if(contentType.contains("png")) extension = ".png";
-                else if(contentType.contains("gif")) extension = ".gif";
+            if(contentType.contains("jpeg") || contentType.contains("jpg")) extension = ".jpg";
+            else if(contentType.contains("png")) extension = ".png";
+            else if(contentType.contains("gif")) extension = ".gif";
 
-                user.setThumnailroot("/static/thumbnails/" + userid);
-                File file = new File(path + extension);
-                multipartFile.transferTo(file);
-            }
+            user.setThumnailroot("/static/thumbnails/" + userid);
+            File file = new File(path + extension);
+            multipartFile.transferTo(file);
             userRepository.save(user);
         }
     }

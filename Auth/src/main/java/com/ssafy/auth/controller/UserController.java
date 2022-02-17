@@ -83,17 +83,28 @@ public class UserController {
     }
 
     @PostMapping("/update") // 정보수정
-    public ResponseEntity<String> updateUser(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken, @RequestBody UpdateDto updateDto, MultipartFile multipartFile) {
+    public ResponseEntity<String> updateUser(@RequestHeader(HttpHeaders.AUTHORIZATION)String bearerToken, @RequestBody UpdateDto updateDto) {
         String token = bearerToken.replace("Bearer ","");//기본적으로 header에 Bearer를 먼저 넣어주고 한다.
         DecodedJWT decodedJWT = JWT.decode(token); //디코딩
         Long userid = Long.parseLong(decodedJWT.getSubject()); //pk 뽑아오기
         try{
-            userService.updateUser(userid, token, updateDto, multipartFile);
+            userService.updateUser(userid, token, updateDto);
         }
         catch (Exception e) {
             return new ResponseEntity<>("로그인 유효 시간이 지났습니다.", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("회원수정 완료.", HttpStatus.OK);
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadThumbnail(long userid, MultipartFile multipartFile) {
+        try {
+            userService.updateThumbnail(userid, multipartFile);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>("로그인 유효 시간이 지났습니다.", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>("프로필 사진 수정 완료.", HttpStatus.OK);
     }
 
     @GetMapping("/mypage") // 마이페이지

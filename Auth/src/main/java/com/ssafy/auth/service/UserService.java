@@ -9,7 +9,8 @@ public interface UserService {
     UserPageDto browseUser(String nickname);
     MyPageDto mypageUser(String token) throws Exception;
     void deleteUser(Long userid, String token) throws Exception;
-    void updateUser(Long userid, String token, UpdateDto updateDto, MultipartFile multipartFile) throws Exception;
+    void updateUser(Long userid, String token, UpdateDto updateDto) throws Exception;
+    void updateThumbnail(Long userid, MultipartFile multipartFile) throws Exception;
     boolean isduplicatedEmail(String email);
     boolean isduplicatedNickname(String nickname);
 }
