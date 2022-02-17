@@ -76,7 +76,7 @@ public class RoomManager {
         broadViewerIdByViewerSid.put(session.getId(), broadCasterUserId + ":" + viewerUserId);
     }
 
-    public void iceCandidate(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) {
+    public void iceCandidate(String broadCasterUserId, JsonObject jsonMessage, WebSocketSession session) throws Exception{
         Room room = roomsByBid.get(broadCasterUserId);
         room.iceCandidate(jsonMessage, session);
     }
@@ -91,7 +91,7 @@ public class RoomManager {
         }
     }
 
-    public void stop(WebSocketSession session) throws IOException {
+    public synchronized void stop(WebSocketSession session) throws IOException {
         String broadCasterUserId = "";
         String viewerUserId = null;
         Room room = null;
