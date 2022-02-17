@@ -12,13 +12,19 @@ import MessageTo from "./components/dm/MessageTo";
 import MessageRead from "./components/dm/MessageRead";
 import BroadMake from "./components/broad/BroadMake";
 import Broad from "./components/broad/Broad"
+// import BroadTest from "./components/broad/Broadtest"
 import "./App.css";
+// import {Helmet} from "react-helmet";
 
 import { useState } from "react/cjs/react.development";
 
 function App() {
   return (
     <div>
+      {/* <Helmet> */}
+        {/* <script src="https://i6c110.p.ssafy.io:8443/js/kurento-utils.js"></script> */}
+        {/* <script src="../public/js/kurento-u.js"></script> */}
+      {/* </Helmet> */}
       <BrowserRouter>
         <NavBar />
         <Routes>
@@ -34,6 +40,7 @@ function App() {
           <Route path="/profile/:nickname" element={<Profile />} />
           <Route path="/makebroad" element={<BroadMake />} />
           <Route path="/watch/:nickname" element={<Broad />} />
+          {/* <Route path="/watch/:nickname" element={<BroadTest />} /> */}
         </Routes>
       </BrowserRouter>
     </div>

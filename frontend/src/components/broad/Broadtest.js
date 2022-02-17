@@ -5,41 +5,9 @@ import axios from "axios";
 import { Button } from "react-bootstrap";
 import $ from 'jquery'
 // import { kurentoUtils } from './kurento-utils.js'
-import { WebRtcPeer } from 'kurento-utils';
 
 
-function Broad() {
-
-  //채팅 메시지 보내기
-  const [chatting, setChatting] = useState("");
-  const [messages, setMessages] = useState([]);
-  const chattingBox = useRef();
-
-  const onChange = (e) => {
-    setChatting(e.target.value);
-  };
-
-  const onKeyPress = (e) => {
-    if (e.key === "Enter" && chatting !== "") {
-      sendMessage(chatting);
-      e.target.value = "";
-      setChatting("");
-    }
-  };
-
-  const sendMessage = (message) => {
-    setMessages(messages.concat(message));
-  };
-
-  useEffect(() => {
-    chattingBox.current.scrollTop = chattingBox.current.scrollHeight;
-    console.log("update");
-  }, [messages]);
-
-  const messageList = messages.map((msg) => <div>{msg}</div>);
-
-
-  //
+function BroadTest() {
   const navigate = useNavigate();
   const { nickname } = useParams();
 
@@ -64,13 +32,13 @@ function Broad() {
   }, []);
 
   // 방송
-  // const mediaStreamConstraints = {
-  //   video: {
-  //     width: 1280,
-  //     height: 720,
-  //   },
-  //   audio: true,
-  // };
+  const mediaStreamConstraints = {
+    video: {
+      width: 1280,
+      height: 720,
+    },
+    audio: true,
+  };
 
   // const localVideo = useRef();
 
@@ -115,27 +83,31 @@ function Broad() {
   // webRTC
 
   useEffect(() => {
+    // const script = document.createElement('script');
+
+    // script.src = "https://i6c110.p.ssafy.io:8443/js/kurento-utils.js"
+    // script.async = true;
+
+    // document.body.appendChild(script);
+
     var myurl = 'i6c110.p.ssafy.io:8113'
     var ws = new WebSocket('wss://' + myurl + '/i6c110');
     // var ws = new WebSocket('https://i6c110.p.ssafy.io:8443/i6c110')
     var video;
     var webRtcPeer;
-    // var broad_id;	// 테스트용 broadcaster id
-    // var viewer_id;
-    var broad_id = 724212
-    var viewer_id = 724212
-    var nickname = 'asddf'
+    var broad_id;	// 테스트용 broadcaster id
+    var viewer_id;
 
-    console.log('-----')
+    broad_id = 4
+    viewer_id = 4
     presenter()
-    // viewer()
 
     window.onload = function () {
         // console = new Console();
         video = document.getElementById('video');
-        // disableStopButton();
-        // enableButton('#sendBroadId', 'broadId()');
-        // enableButton('#sendViewerId', 'viewerId()');
+        disableStopButton();
+        enableButton('#sendBroadId', 'broadId()');
+        enableButton('#sendViewerId', 'viewerId()');
     }
 
     // function broadId() {
@@ -190,7 +162,7 @@ function Broad() {
 
 
     function presenterResponse(message) {
-        if (message.response !== 'accepted') {
+        if (message.response != 'accepted') {
             var errorMsg = message.message ? message.message : 'Unknow error';
             console.info('Call not accepted for the following reason: ' + errorMsg);
             dispose();
@@ -203,7 +175,7 @@ function Broad() {
     }
 
     function viewerResponse(message) {
-        if (message.response !== 'accepted') {
+        if (message.response != 'accepted') {
             var errorMsg = message.message ? message.message : 'Unknow error';
             console.info('Call not accepted for the following reason: ' + errorMsg);
             dispose();
@@ -223,7 +195,7 @@ function Broad() {
                 localVideo: video,
                 onicecandidate: onIceCandidate
             }
-            webRtcPeer = new WebRtcPeer.WebRtcPeerSendonly(options,
+            webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
                 function (error) {
                     if (error) {
                         return console.error(error);
@@ -231,7 +203,7 @@ function Broad() {
                     webRtcPeer.generateOffer(onOfferPresenter);
                 });
 
-            // enableStopButton();
+            enableStopButton();
         }
     }
 
@@ -243,7 +215,6 @@ function Broad() {
             id: 'makeRoom',
             roomid: broad_id,
             userid: viewer_id,
-            nickname: nickname,
             sdpOffer: offerSdp
         }
         sendMessage(message);
@@ -257,7 +228,7 @@ function Broad() {
                 remoteVideo: video,
                 onicecandidate: onIceCandidate
             }
-            webRtcPeer = new WebRtcPeer.WebRtcPeerRecvonly(options,
+            webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options,
                 function (error) {
                     if (error) {
                         return console.error(error);
@@ -265,7 +236,7 @@ function Broad() {
                     this.generateOffer(onOfferViewer);
                 });
 
-            // enableStopButton();
+            enableStopButton();
         }
     }
 
@@ -277,7 +248,6 @@ function Broad() {
             id: 'enterRoom',
             roomid: broad_id,
             userid: viewer_id,
-            nickname: nickname,
             sdpOffer: offerSdp
         }
         sendMessage(message);
@@ -310,30 +280,30 @@ function Broad() {
         }
         // hideSpinner(video);
 
-        // disableStopButton();
+        disableStopButton();
     }
 
-    // function disableStopButton() {
-    //     enableButton('#presenter', 'presenter()');
-    //     enableButton('#viewer', 'viewer()');
-    //     disableButton('#stop');
-    // }
+    function disableStopButton() {
+        enableButton('#presenter', 'presenter()');
+        enableButton('#viewer', 'viewer()');
+        disableButton('#stop');
+    }
 
-    // function enableStopButton() {
-    //     disableButton('#presenter');
-    //     disableButton('#viewer');
-    //     enableButton('#stop', 'stop()');
-    // }
+    function enableStopButton() {
+        disableButton('#presenter');
+        disableButton('#viewer');
+        enableButton('#stop', 'stop()');
+    }
 
-    // function disableButton(id) {
-    //     $(id).attr('disabled', true);
-    //     $(id).removeAttr('onclick');
-    // }
+    function disableButton(id) {
+        $(id).attr('disabled', true);
+        $(id).removeAttr('onclick');
+    }
 
-    // function enableButton(id, functionName) {
-    //     $(id).attr('disabled', false);
-    //     $(id).attr('onclick', functionName);
-    // }
+    function enableButton(id, functionName) {
+        $(id).attr('disabled', false);
+        $(id).attr('onclick', functionName);
+    }
 
 
 
@@ -359,9 +329,7 @@ function Broad() {
     //     event.preventDefault();
     //     $(this).ekkoLightbox();
     // });
-
-
-  },[])
+  })
   
 
 
@@ -374,17 +342,14 @@ function Broad() {
       >
         <div className="w-100 p-0">
           {/* 비디오 */}
-          <div id="videoBig">
-				  	<video id="video" autoPlay width="640px" height="480px"></video>
-				  </div>
-          {/* <video
+          <video
             id="video"
-            // poster="../img/thumbnail.png"
+            poster="../img/thumbnail.png"
             className="w-100"
             // ref={localVideo}
             autoPlay
-            // playsInline
-          ></video> */}
+            playsInline
+          ></video>
 
           {/* 비디오 밑 */}
           <div className="d-flex mb-2">
@@ -432,94 +397,23 @@ function Broad() {
 
         {/* 채팅 */}
         <div
-          ref={chattingBox}
-          className="p-0 border"
-          // style={{ minHeight: "200px", width:"400px"}}
-          style={{
-            position: "relative",
-            minHeight: "400px",
-            width: "400px",
-            height: "400px",
-            overflow: "auto",
-          }}
-
+          className="d-none d-md-block p-0 border"
+          style={{ minHeight: "200px", width:"400px"}}
         >
-          <div style={{ position: "sticky", top: 0, backgroundColor: "white" }}>
-            채팅창
-          </div>
-          <div>{messageList}</div>
-          <input
-            placeholder="채팅을 입력해주세요"
-            onChange={onChange}
-            onKeyPress={onKeyPress}
-            style={{
-              position: "sticky",
-              width: "100%",
-              clear: "left",
-              float: "left",
-              top: "400px",
-              left: 0,
-              bottom: 0,
-            }}
-          ></input>
+          채팅창
         </div>
-
-
-
-        {/* <div
-          ref={chattingBox}
-          className="p-0 border d-md-none"
-          // style={{ minHeight: "200px", width:"400px"}}
-          style={{
-            position: "relative",
-            minHeight: "400px",
-            width: "100%",
-            height: "400px",
-            overflow: "auto",
-          }}
-
-        >
-          <div style={{ position: "sticky", top: 0, backgroundColor: "white" }}>
-            채팅창
-          </div>
-          <div>{messageList}</div>
-          <input
-            placeholder="채팅을 입력해주세요"
-            onChange={onChange}
-            onKeyPress={onKeyPress}
-            style={{
-              position: "sticky",
-              width: "100%",
-              clear: "left",
-              float: "left",
-              top: "400px",
-              left: 0,
-              bottom: 0,
-            }}
-          ></input>
-        </div> */}
-        {/* <div
+        <div
           className="p-0 border d-md-none"
           style={{ minHeight: "200px", width:"100%", height:"40vh"}}
         >
           채팅창
-        </div> */}
+        </div>
       </div>
 
 
 
       {/* webRTC */}
-      {/* <input type="text" id="broadId"/><button id="sendBroadId" onClick={broadId}>broad_id 입력</button>
-      <input type="text" id="viewerId"/><button id="sendViewerId" onClick={viewerId}>viewer_id 입력</button>
-      <a id="presenter" className="btn btn-success" onClick={presenter}>
-        <span className="glyphicon glyphicon-play"></span> Presenter </a> 
-
-        <a id="viewer"  className="btn btn-primary" onClick={viewer}>
-          <span className="glyphicon glyphicon-user"></span> Viewer</a> 
-
-          <a id="stop" className="btn btn-danger" disabled="disabled">
-            <span className="glyphicon glyphicon-stop"></span> Stop</a> */}
-
+      {/* <input type="text" id="broadId"/><button id="sendBroadId" onclick={broadId}>broad_id 입력</button> */}
 
 
 
@@ -528,4 +422,4 @@ function Broad() {
   );
 }
 
-export default Broad;
+export default BroadTest;
