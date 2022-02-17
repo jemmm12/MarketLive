@@ -9,6 +9,7 @@ import com.ssafy.auth.repository.UserRepository;
 import com.ssafy.auth.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -117,8 +118,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateThumbnail(Long userid, MultipartFile multipartFile) throws Exception {
         User user = userRepository.findByUserid(userid).get();
-        if(multipartFile != null && !multipartFile.isEmpty()) {
-            String path = "/static/thumbnails/" + userid;
+        if(!multipartFile.isEmpty()) { // && !multipartFile.isEmpty()
+            //String path = new ClassPathResource("/static").getFile().getAbsolutePath() + "\\thumbnails";
+            String path = "//app";
             String contentType = multipartFile.getContentType();
             File file = new File(path);
             String extension = null;
@@ -131,12 +133,13 @@ public class UserServiceImpl implements UserService {
             else if(contentType.contains("png")) extension = ".png";
             else if(contentType.contains("gif")) extension = ".gif";
 
-            path += extension;
+            path = path + "\\" + userid + extension;
             file = new File(path);
             user.setThumnailroot(path);
 
-            multipartFile.transferTo(file);
             userRepository.save(user);
+            multipartFile.transferTo(file);
+
         }
     }
 

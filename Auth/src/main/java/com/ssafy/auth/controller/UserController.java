@@ -97,14 +97,14 @@ public class UserController {
     }
 
     @PostMapping("/upload") // 프로필 사진 수정
-    public ResponseEntity<String> uploadThumbnail(@RequestParam long userid, MultipartFile multipartFile) {
+    public ResponseEntity<String> uploadThumbnail(@RequestParam long userid, @RequestParam MultipartFile multipartFile) {
         try {
             userService.updateThumbnail(userid, multipartFile);
         }
         catch (Exception e) {
-            return new ResponseEntity<>("로그인 유효 시간이 지났습니다.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("The path could not be found", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("프로필 사진 수정 완료.", HttpStatus.OK);
+        return new ResponseEntity<>("Profile thumbnail update complete", HttpStatus.OK);
     }
 
     @GetMapping("/mypage") // 마이페이지
