@@ -14,7 +14,8 @@ import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -121,14 +122,14 @@ public class RoomManager {
         }
     }
 
-    private void deleteRoomInfo(Room room, WebSocketSession session, String broadCasterUserId) throws IOException {
+    private synchronized void deleteRoomInfo(Room room, WebSocketSession session, String broadCasterUserId) throws IOException {
         String errorMessage = "";
         try {
             errorMessage = room.stop(session);
         }catch (Throwable t) {
             handleErrorResponse(t, "방 중지(stop) 중 오류 발생", session, "stopResponse");
         }
-        
+
         try {
             switch (errorMessage) {
                 case "broadcaster":
@@ -136,11 +137,17 @@ public class RoomManager {
                     roomsBySession.remove(session.getId());
                     broadIdByBroadSid.remove(session.getId());
                     // 모든 viewer 정보 삭제
-                    Collection<String> strs = broadViewerIdByViewerSid.values();
-                    for (String viewer_id : strs) {
-                        if (broadViewerIdByViewerSid.get(viewer_id).split(":")[0].equals(broadCasterUserId)) {
-                            broadViewerIdByViewerSid.remove(viewer_id);
+                    Set<String> viewer_ids = new HashSet<>();
+                    Set<String> keySet = broadViewerIdByViewerSid.keySet();
+                    String value;
+                    for(String key : keySet){
+                        value = broadViewerIdByViewerSid.get(key).split(":")[0];
+                        if(value.equals(broadCasterUserId)){
+                            viewer_ids.add(value);
                         }
+                    }
+                    for(String key : viewer_ids){
+                        broadViewerIdByViewerSid.remove(key);
                     }
                     break;
                 case "error":
