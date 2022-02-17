@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserid(userid).get();
         if(!multipartFile.isEmpty()) { // && !multipartFile.isEmpty()
             //String path = new ClassPathResource("/static").getFile().getAbsolutePath() + "\\thumbnails"; 로컬 확인용
-            String path = "//app";
+            String path = "/app";
             String contentType = multipartFile.getContentType();
             File file = new File(path);
             String extension = null;
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService {
             else if(contentType.contains("png")) extension = ".png";
             else if(contentType.contains("gif")) extension = ".gif";
 
-            path = userid + extension;
+            path = path + userid + extension;
             file = new File(path);
 
             String rootPath = "";
