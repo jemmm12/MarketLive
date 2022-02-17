@@ -247,6 +247,7 @@ function Broad() {
                 break;
             case 'stopCommunication':
                 dispose();
+                navigate('/')
                 break;
             case 'message':
                 printMessage(parsedMessage);
@@ -589,7 +590,7 @@ function Broad() {
               src={"/user/thumbnail/" + broadid}
               onError={addDefaultImg}
               alt=""
-              style={{ width: "50px", height: "50px", cursor: "pointer" }}
+              style={{ width: "50px", height: "50px", cursor: "pointer", borderRadius: "70%",}}
               className="ms-1"
               onClick={onProfile}
             />
