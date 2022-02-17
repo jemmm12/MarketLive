@@ -29,3 +29,10 @@ spring:
     host: 3.38.250.70
     port: 9110
     password: /.,/.,c110
+
+    # multipart 설정
+    spring:
+      servlet:
+        multipart:
+          enabled: true
+          max-file-size: 5MB
