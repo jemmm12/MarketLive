@@ -12,6 +12,7 @@ import MessageTo from "./components/dm/MessageTo";
 import MessageRead from "./components/dm/MessageRead";
 import BroadMake from "./components/broad/BroadMake";
 import Broad from "./components/broad/Broad"
+import Footer from "./components/Footer"
 // import BroadTest from "./components/broad/Broadtest"
 import "./App.css";
 // import {Helmet} from "react-helmet";
@@ -42,6 +43,7 @@ function App() {
           <Route path="/watch/:broadid/:viewerid/:mynickname" element={<Broad />} />
           {/* <Route path="/watch/:nickname" element={<BroadTest />} /> */}
         </Routes>
+        {/* <Footer /> */}
       </BrowserRouter>
     </div>
   );

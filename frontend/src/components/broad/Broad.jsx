@@ -14,6 +14,7 @@ function Broad() {
   const [broadTitle, setBroadTitle] = useState('')
   const [thumbnail, setThumbnail] = useState('')
 
+
   
 
   //채팅 메시지 보내기
@@ -176,6 +177,7 @@ function Broad() {
     var viewer_id = viewerid
     var nickname = mynickname
     // console.log(myNickname)
+    var chatInput = document.getElementById('chatInput');
 
     // console.log('-----')
     if (broadid === viewerid){
@@ -422,12 +424,80 @@ function Broad() {
     //     $(this).ekkoLightbox();
     // });
   // }, 1000)
+
+
   
+    // 채팅
+
+    
+
+    // function sendchat(chat){
+    //   var message = chat
+    //   if(message !== ""){
+    //       var jsonMessage = {
+    //           id: 'message',
+    //           roomid: broadid,
+    //           message: message
+    //       };
+    //       sendMessage(jsonMessage);
+    //   }
+    // }
+
+    // const enterkey = () => {
+    //     if (window.event.keyCode === 13) {
+    //         sendchat(chatting);
+    //     }
+    //   }
+
+    // const onChange_ = (e) => {
+    //   setChatting(e.target.value);
+    // };
+
+
+
+
+    
+    // function printMessage(fullmessage){
+    //   var message = fullmessage.message;
+    //   $("#messageWindow").html($("#messageWindow").html()
+    //       + "<p class='chat_content'><b class='impress'>" + message + "</b></p>");
+    // }
+
+    // function send(){
+    //   var message = inputMessage.value;
+    //   if(message != ""){
+    //       var jsonMessage = {
+    //           id: 'message',
+    //           roomid: broad_id,
+    //           message: message
+    //       };
+    //       sendMessage(jsonMessage);
+    //   }
+    //   inputMessage.value = "";
+      
+    // }
+
+    // //     엔터키를 통해 send함
+    // const enterkey = (e) => {
+    //   if (window.event.keyCode === 13) {
+    //       send();
+    //       e.target.value = "";
+    //       setChatting("");
+    //   }
+    // }
+
   },[])
-  // }
+
+  // const sendMessage_ = (message) => {
+  //   setMessages(messages.concat(message));
+  // };
+
   
 
 
+  const onHome = () => {
+    navigate("/")
+  }
 
   return (
     <div>
@@ -489,7 +559,12 @@ function Broad() {
                 <Button className="ms-2" variant="secondary" size="sm">
                   설정
                 </Button>
-                <Button className="ms-2" variant="secondary" size="sm">
+                <Button 
+                  className="ms-2" 
+                  variant="secondary" 
+                  size="sm" 
+                  onClick={onHome}  
+                >
                   방송 종료
                 </Button>
               </div>
@@ -531,7 +606,17 @@ function Broad() {
               bottom: 0,
             }}
           ></input>
+          </div>
         </div>
+
+        {/* 채팅 테스트 */}
+        {/* <div id="_chatbox"> */}
+					{/* <fieldset> */}
+						{/* <div id="messageWindow"></div> */}
+						{/* <input id="chatInput" type="text" onKeyPress={enterkey} onChange={onChat} /> */}
+						{/* <input type="submit" value="send" onClick={send} /> */}
+					{/* </fieldset> */}
+				{/* </div> */}
 
 
 
@@ -573,7 +658,7 @@ function Broad() {
         >
           채팅창
         </div> */}
-      </div>
+      
 
     </div>
   );
