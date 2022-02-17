@@ -88,7 +88,7 @@ function MyPage() {
                 <img
                     src={"/user/thumbnail/" + inputs.userid}
                     alt=""
-                    style={{ width: "80px" }}
+                    style={{ width: "80px", height:"80px", borderRadius: "70%" }}
                 />) : (
                 <img src="../img/user.png" alt="" style={{ width: "80px" }} />
                 )}

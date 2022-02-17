@@ -553,6 +553,10 @@ function Broad() {
   const onHome = () => {
     navigate("/")
   }
+  const addDefaultImg=e=>{
+    e.target.src = "https://i6c110.p.ssafy.io/img/user.png";
+  }
+
 
   return (
     <div>
@@ -583,6 +587,7 @@ function Broad() {
             {/* 이미지, 방송제목, 닉네임 */}
             <img
               src={"/user/thumbnail/" + broadid}
+              onError={addDefaultImg}
               alt=""
               style={{ width: "50px", height: "50px", cursor: "pointer" }}
               className="ms-1"

@@ -185,6 +185,10 @@ function MyPageEdit() {
         setInputs({...inputs,thumnailroot:""})
     }
 
+    const addDefaultImg=e=>{
+        e.target.src = "https://i6c110.p.ssafy.io/img/user.png";
+      }
+
 
     if (inputs.email === ''){
         return(
@@ -253,7 +257,8 @@ function MyPageEdit() {
                         </div>
                     ) : ( */}
                         <img 
-                            src={chosenImage} 
+                            src={"/user/thumbnail/" + inputs.userid}
+                            onError={addDefaultImg}
                             alt="" 
                             style={{width:"80px", height:"80px", borderRadius: "70%"}}
                         />
