@@ -40,14 +40,14 @@ public class BroadCasterController {
         return new ResponseEntity<>("modify room", HttpStatus.CREATED);
     }
 
-    @ApiOperation(value = "방 폭파", notes = "BroadCaster가 방을 없앤다.", response = String.class)
-    @DeleteMapping("/blow-room")
-    public ResponseEntity<String> blowRoom(@RequestParam @ApiParam(value = "폭파할 방의 user id", required = true) long userid) {
-        try{
-            broadCasterService.blowRoom(userid);
-        }catch(Exception e){
-            return new ResponseEntity<>("blow room failed", HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>("blow room", HttpStatus.CREATED);
-    }
+//    @ApiOperation(value = "방 폭파", notes = "BroadCaster가 방을 없앤다.", response = String.class)
+//    @DeleteMapping("/blow-room")
+//    public ResponseEntity<String> blowRoom(@RequestParam @ApiParam(value = "폭파할 방의 user id", required = true) long userid) {
+//        try{
+//            broadCasterService.blowRoom(userid);
+//        }catch(Exception e){
+//            return new ResponseEntity<>("blow room failed", HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<>("blow room", HttpStatus.CREATED);
+//    }
 }

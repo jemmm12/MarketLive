@@ -28,13 +28,12 @@ public class ViewerServiceImpl implements ViewerService{
         return roomDto;
     }
 
-    @Override
-    public void exitRoom(long broad_userid, long viewer_userid) {
-        // room 시청자 정보 제거
-        SetOperations<String, String> setOperations = redisTemplate.opsForSet();
-        String VIEWERS_KEY = GlobalFunctions.generateRoomViewersKey(broad_userid);
-        setOperations.remove(VIEWERS_KEY, String.valueOf(viewer_userid));
-    }
-
+//    @Override
+//    public void exitRoom(long broad_userid, long viewer_userid) {
+//        // room 시청자 정보 제거
+//        SetOperations<String, String> setOperations = redisTemplate.opsForSet();
+//        String VIEWERS_KEY = GlobalFunctions.generateRoomViewersKey(broad_userid);
+//        setOperations.remove(VIEWERS_KEY, String.valueOf(viewer_userid));
+//    }
 
 }

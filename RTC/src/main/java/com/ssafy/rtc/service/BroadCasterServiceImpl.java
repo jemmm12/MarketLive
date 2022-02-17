@@ -39,12 +39,12 @@ public class BroadCasterServiceImpl implements BroadCasterService {
         hashOperations.putAll(KEY, roomDtoToMap(roomDto));
     }
 
-    @Override
-    public void blowRoom(long userid) {
-        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
-        String KEY = GlobalFunctions.generateRoomInfoKey(userid);
-        redisTemplate.delete(KEY);
-    }
+//    @Override
+//    public void blowRoom(long userid) {
+//        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+//        String KEY = GlobalFunctions.generateRoomInfoKey(userid);
+//        redisTemplate.delete(KEY);
+//    }
 
     private Map<String, Object> roomDtoToMap(RoomDto roomDto) {
         Map<String, Object> map = new HashMap<>();
