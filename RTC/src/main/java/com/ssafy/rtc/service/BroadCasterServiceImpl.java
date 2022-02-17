@@ -23,9 +23,7 @@ public class BroadCasterServiceImpl implements BroadCasterService {
     private final String uploadUrl = "classpath:static/thumbnails/";
 
     @Override
-    public void createRoom(RoomDto roomDto, MultipartFile multipartFile) {
-        // TODO: 사진 저장 추가
-
+    public void createRoom(RoomDto roomDto, MultipartFile multipartFile) throws Exception{
         if(!multipartFile.isEmpty()) { // && !multipartFile.isEmpty()
             //String path = new ClassPathResource("/static").getFile().getAbsolutePath() + "\\thumbnails"; // 로컬 확인용
             String path = "/broad";
@@ -45,11 +43,7 @@ public class BroadCasterServiceImpl implements BroadCasterService {
             file = new File(path);
             roomDto.setThumbnail(path);
 
-            try {
-                multipartFile.transferTo(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            multipartFile.transferTo(file);
         }
         HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
         String KEY = GlobalFunctions.generateRoomInfoKey(roomDto.getUserid());

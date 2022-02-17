@@ -23,9 +23,7 @@ public class BroadCasterController {
     @ApiOperation(value = "방 생성", notes = "BroadCaster가 방을 새로 만든다.", response = String.class)
     @PostMapping("/create-room")
     public ResponseEntity<String> createRoom(@RequestParam("files") MultipartFile multipartFile, RoomDto roomDto) {
-        try{
-
-
+        try {
 //            String origFilename = files.getOriginalFilename();
 //            String filename = new MD5Generator(origFilename).toString();
 //            /* 실행되는 위치의 'files' 폴더에 파일이 저장됩니다. */
@@ -43,19 +41,18 @@ public class BroadCasterController {
 //            files.transferTo(new File(filePath));
 //            roomDto.setThumbnail(filePath);
             broadCasterService.createRoom(roomDto, multipartFile);
-        }catch(Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>("create room failed", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("create room", HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/thumbnail/{userid}", produces = MediaType.IMAGE_JPEG_VALUE) // 유저 썸네일 요청
-    public ResponseEntity<byte []> getProfile(@PathVariable long userid) {
+    public ResponseEntity<byte[]> getProfile(@PathVariable long userid) {
         byte[] result;
         try {
             result = broadCasterService.getThumbnail(userid);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         System.out.println("여기도됨");
@@ -66,9 +63,9 @@ public class BroadCasterController {
     @ApiOperation(value = "방 수정", notes = "BroadCaster가 방 정보를 수정한다.", response = String.class)
     @PutMapping("/modify-room")
     public ResponseEntity<String> modifyRoom(@RequestBody @ApiParam(value = "방을 수정하기 위한 방 정보", required = true) RoomDto roomDto) {
-        try{
+        try {
             broadCasterService.modifyRoom(roomDto);
-        }catch(Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>("modify room failed", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("modify room", HttpStatus.CREATED);
