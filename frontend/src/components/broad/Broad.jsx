@@ -12,7 +12,7 @@ function Broad() {
   const navigate = useNavigate();
   const [broadNickname, setBroadNickname] = useState('')
   const [broadTitle, setBroadTitle] = useState('')
-  
+  const [thumbnail, setThumbnail] = useState('')
 
   
 
@@ -100,6 +100,7 @@ function Broad() {
       console.log(res)
       setBroadNickname(res.data.nickname)
       setBroadTitle(res.data.title)
+      setThumbnail(res.data.thumbnail)
     })
     .catch(err => {
       console.log(err)
@@ -243,6 +244,7 @@ function Broad() {
     }
 
     window.onbeforeunload = function () {
+      console.log('----------접속 종료--------------')
         ws.close();
     }
 
@@ -438,6 +440,7 @@ function Broad() {
           <div id="videoBig">
 				  	<video id="video" autoPlay 
               // width="640px" height="480px"
+              // poster=""
               className="w-100"
             ></video>
 				  </div>
@@ -503,7 +506,8 @@ function Broad() {
             position: "relative",
             minHeight: "400px",
             width: "400px",
-            height: "400px",
+            // height: "400px",
+            height: "auto",
             overflow: "auto",
           }}
 
@@ -521,7 +525,8 @@ function Broad() {
               width: "100%",
               clear: "left",
               float: "left",
-              top: "400px",
+              // top: "400px",
+              top:"100%",
               left: 0,
               bottom: 0,
             }}
@@ -569,24 +574,6 @@ function Broad() {
           채팅창
         </div> */}
       </div>
-
-
-
-      {/* webRTC */}
-      {/* <input type="text" id="broadId"/><button id="sendBroadId" onClick={broadId}>broad_id 입력</button>
-      <input type="text" id="viewerId"/><button id="sendViewerId" onClick={viewerId}>viewer_id 입력</button>
-      <a id="presenter" className="btn btn-success" onClick={presenter}>
-        <span className="glyphicon glyphicon-play"></span> Presenter </a> 
-
-        <a id="viewer"  className="btn btn-primary" onClick={viewer}>
-          <span className="glyphicon glyphicon-user"></span> Viewer</a> 
-
-          <a id="stop" className="btn btn-danger" disabled="disabled">
-            <span className="glyphicon glyphicon-stop"></span> Stop</a> */}
-
-
-
-
 
     </div>
   );
