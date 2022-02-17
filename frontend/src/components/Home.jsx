@@ -38,20 +38,24 @@ function Home() {
       .then((res) => {
         console.log("room List: ", res);
         setBroads(res.data);
-        // res.data.map((room) => {
-        //   console.log("userid: ", room.userid);
-        //   axios({
-        //     method: "get",
-        //     url: "/user/thumbnail/" + room.userid,
-        //   })
-        //     .then((response) => {
-        //       console.log(response);
-        //       setBroads(...broads, response.data);
-        //     })
-        //     .catch((err) => {
-        //       console.log("error: ", err);
-        //     });
-        // });
+        res.data.map((room) => {
+          console.log("userid: ", room.userid);
+          axios({
+            method: "get",
+            url: "/user/thumbnail/" + room.userid,
+          })
+            .then((response) => {
+              console.log(response);
+              if(response.data===""){
+                response.data = null;
+                console.log("빈데이터 변경",response.data);
+              }
+              
+            })
+            .catch((err) => {
+              console.log("error: ", err);
+            });
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -98,6 +102,10 @@ function Home() {
         <Spinner animation="border" className="d-flex mx-auto" />
       </div>
     );
+  }
+
+  const addDefaultImg=e=>{
+    e.target.src = "../img/user.png";
   }
 
   return (
@@ -160,7 +168,9 @@ function Home() {
                 <div className="d-flex mt-2">
                   <img
                     src={"/user/thumbnail/" + broad.userid}
+                    //src="../img/user.png"
                     alt=""
+                    onError={addDefaultImg}
                     style={{
                       width: "50px",
                       height: "50px",

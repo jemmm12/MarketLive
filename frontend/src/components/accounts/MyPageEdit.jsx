@@ -161,6 +161,14 @@ function MyPageEdit() {
         })
         .then(res => {
             console.log(res)
+            const reader = new FileReader();
+            reader.readAsDataURL(e.target.files[0]);
+            return new Promise((resolve)=>{
+              reader.onload = () =>{
+                setChosenImage(reader.result);
+                resolve();
+              }
+            })
         })
         .catch(err => {
             console.log(err)
@@ -174,6 +182,7 @@ function MyPageEdit() {
     // 지우기 클릭시
     const imageCancel = () => {
         setChosenImage('../img/user.png')
+        setInputs({...inputs,thumnailroot:""})
     }
 
 
@@ -238,17 +247,17 @@ function MyPageEdit() {
                     <h2 className='fw-bold ms-1'>프로필 수정</h2>
                 </div>
                 <div className='mt-4 d-flex ms-1'>
-                    {thumbnailSpinner ? (
+                    {/* {thumbnailSpinner ? (
                         <div style={{ width:"80px", height:"80px"}}>
                             <Spinner animation="border" className="d-flex mx-auto" style={{marginTop:"24px"}}/>
                         </div>
-                    ) : (
+                    ) : ( */}
                         <img 
                             src={chosenImage} 
                             alt="" 
                             style={{width:"80px", height:"80px", borderRadius: "70%"}}
                         />
-                    )}
+                    {/* )} */}
                     
                     {/* <Button 
                         variant="secondary" 
