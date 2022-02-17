@@ -8,7 +8,7 @@ import com.ssafy.auth.entity.User;
 import com.ssafy.auth.repository.UserRepository;
 import com.ssafy.auth.token.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,7 +29,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final String uploadUrl = "//app/users/thumbnails/";
+    private final String uploadUrl = "classpath:static/thumbnails/";
 
     @Override
     public String saveUser(SignupDto signupDto) {
@@ -119,8 +121,8 @@ public class UserServiceImpl implements UserService {
     public void updateThumbnail(Long userid, MultipartFile multipartFile) throws Exception {
         User user = userRepository.findByUserid(userid).get();
         if(!multipartFile.isEmpty()) { // && !multipartFile.isEmpty()
-            //String path = new ClassPathResource("/static").getFile().getAbsolutePath() + "\\thumbnails";
-            String path = "//app";
+            //String path = new ClassPathResource("/static").getFile().getAbsolutePath() + "\\thumbnails"; // 로컬 확인용
+            String path = "/app";
             String contentType = multipartFile.getContentType();
             File file = new File(path);
             String extension = null;
@@ -133,23 +135,35 @@ public class UserServiceImpl implements UserService {
             else if(contentType.contains("png")) extension = ".png";
             else if(contentType.contains("gif")) extension = ".gif";
 
-            path = path + "\\" + userid + extension;
+            path = path + "/" + userid + extension; // 로컬 확인용
             file = new File(path);
             user.setThumnailroot(path);
 
-            userRepository.save(user);
             multipartFile.transferTo(file);
-
+            userRepository.save(user);
         }
     }
 
+    @Override
+    public byte[] getThumbnail(Long userid) throws Exception {
+        User user = userRepository.findByUserid(userid).get();
+        String path = user.getThumnailroot();
+        if(user.getThumnailroot() != null) {
+            InputStream imageStream = new FileInputStream(path);
+            byte[] imageByteArray = IOUtils.toByteArray(imageStream);
+            imageStream.close();
+            return imageByteArray;
+        }
+        return new byte[0];
+    }
+
     @Override 
-    public boolean isduplicatedEmail(String email) { // 이메일 중복체크
+    public boolean isDuplicatedEmail(String email) { // 이메일 중복체크
         return userRepository.existsByEmail(email);
     }
 
     @Override
-    public boolean isduplicatedNickname(String nickname) { // 닉네임 중복체크
+    public boolean isDuplicatedNickname(String nickname) { // 닉네임 중복체크
         return userRepository.existsByNickname(nickname);
     }
 }

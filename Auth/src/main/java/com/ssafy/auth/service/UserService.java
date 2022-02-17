@@ -11,6 +11,7 @@ public interface UserService {
     void deleteUser(Long userid, String token) throws Exception;
     void updateUser(Long userid, String token, UpdateDto updateDto) throws Exception;
     void updateThumbnail(Long userid, MultipartFile multipartFile) throws Exception;
-    boolean isduplicatedEmail(String email);
-    boolean isduplicatedNickname(String nickname);
+    byte[] getThumbnail(Long userid) throws Exception;
+    boolean isDuplicatedEmail(String email);
+    boolean isDuplicatedNickname(String nickname);
 }

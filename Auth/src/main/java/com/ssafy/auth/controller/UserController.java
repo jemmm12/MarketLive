@@ -7,6 +7,7 @@ import com.ssafy.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,7 +43,7 @@ public class UserController {
     @GetMapping(path = "/checkemail") // 이메일 중복체크
     public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
         try {
-            if(userService.isduplicatedEmail(email)) return new ResponseEntity<>( false, HttpStatus.CONFLICT);
+            if(userService.isDuplicatedEmail(email)) return new ResponseEntity<>( false, HttpStatus.CONFLICT);
             else return new ResponseEntity<>(true, HttpStatus.OK);
         }
         catch (Exception e) {
@@ -53,7 +54,7 @@ public class UserController {
     @GetMapping(path = "/checknickname") // 닉네임 중복체크
     public ResponseEntity<Boolean> checkNickname(@RequestParam String nickname) {
         try {
-            if(userService.isduplicatedNickname(nickname)) return new ResponseEntity<>( false, HttpStatus.CONFLICT);
+            if(userService.isDuplicatedNickname(nickname)) return new ResponseEntity<>( false, HttpStatus.CONFLICT);
             else return new ResponseEntity<>(true, HttpStatus.OK);
         }
         catch (Exception e) {
@@ -105,6 +106,18 @@ public class UserController {
             return new ResponseEntity<>("The path could not be found", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Profile thumbnail update complete", HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/thumbnail/{userid}", produces = MediaType.IMAGE_JPEG_VALUE) // 유저 썸네일 요청
+    public ResponseEntity<byte []> getProfile(@PathVariable long userid) {
+        byte[] result;
+        try {
+            result = userService.getThumbnail(userid);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/mypage") // 마이페이지
