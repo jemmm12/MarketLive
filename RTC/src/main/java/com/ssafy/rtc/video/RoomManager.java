@@ -57,11 +57,13 @@ public class RoomManager {
             room = roomsByBid.get(broadCasterUserId);
         } catch (Throwable t) {
             handleErrorResponse(t, "get broadcaster's room failed", session, "viewerResponse");
+            return;
         }
         try {
             room.enterRoom(jsonMessage, session);
         } catch (Throwable t) {
-            handleErrorResponse(t, "enterring broadcaster's room failed", session, "viewerResponse");
+            handleErrorResponse(t, "entering broadcaster's room failed", session, "viewerResponse");
+            return;
         }
         String viewerUserId = jsonMessage.get(ResponseKeys.USERID.toString()).getAsString();
         broadViewerIdByViewerSid.put(session.getId(), broadCasterUserId + ":" + viewerUserId);
@@ -78,23 +80,28 @@ public class RoomManager {
             room.sendMessage(jsonMessage, session);
         } catch (Throwable t) {
             handleErrorResponse(t, "sending message failed", session, "viewerResponse");
+            return;
         }
     }
 
     public void stop(WebSocketSession session) throws IOException {
         String broadCasterUserId = "";
         String viewerUserId = null;
-        Room room;
-        if (broadViewerIdByViewerSid.containsKey(session.getId())) {   // 현재 세션은 viewer
-            String[] ids = broadViewerIdByViewerSid.get(session.getId()).split(":");
-            broadCasterUserId = ids[0];
-            viewerUserId = ids[1];
-            room = roomsByBid.get(broadCasterUserId);
-        } else {  //현재 세션은 broadcaster
-            broadCasterUserId = broadIdByBroadSid.get(session.getId());  //broadcaster id 안 가지고 오는 버그 수정
-            room = roomsBySession.get(session.getId());
+        Room room = null;
+        try {
+            if (broadViewerIdByViewerSid.containsKey(session.getId())) {   // 현재 세션은 viewer
+                String[] ids = broadViewerIdByViewerSid.get(session.getId()).split(":");
+                broadCasterUserId = ids[0];
+                viewerUserId = ids[1];
+                room = roomsByBid.get(broadCasterUserId);
+            } else {  //현재 세션은 broadcaster
+                broadCasterUserId = broadIdByBroadSid.get(session.getId());  //broadcaster id 안 가지고 오는 버그 수정
+                room = roomsBySession.get(session.getId());
+            }
+        }catch(Throwable t) {
+            handleErrorResponse(t, "find id failed", session, "stopResponse");
+            return;
         }
-
         // redis에서 정보 삭제하기
         deleteRedisInfo(broadCasterUserId, viewerUserId);
 
@@ -128,6 +135,7 @@ public class RoomManager {
             errorMessage = room.stop(session);
         }catch (Throwable t) {
             handleErrorResponse(t, "방 중지(stop) 중 오류 발생", session, "stopResponse");
+            return;
         }
 
         try {
@@ -159,6 +167,7 @@ public class RoomManager {
             }
         } catch (Throwable t) {
             handleErrorResponse(t, "방 삭제중 오류 발생", session, "stopResponse");
+            return;
         }
     }
 
