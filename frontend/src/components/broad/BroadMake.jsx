@@ -125,7 +125,7 @@ function BroadMake() {
       })
       .then(res => {
         console.log(res)
-        navigate('/watch/'+nickname)
+        navigate(`/watch/${userid}/${userid}/${nickname}`)
       })
       .catch(err => {
         console.log(err)

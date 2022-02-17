@@ -143,11 +143,32 @@ function MyPageEdit() {
     // 업로드 버튼 클릭시
     const clickImageUpload = () => {
         imageUpload.current.click()
-        // setThumbnailSpinner(!thumbnailSpinner)
     }
     // 파일 선택시
     const onImageChange = (e) => {
-        console.log(e.target.files[0])
+        // setThumbnailSpinner(true)
+        const formData = new FormData()
+        formData.append('multipartFile', e.target.files[0])
+        // const response = 
+        axios({
+            Headers: {
+                'content-type': 'multipart/form-data',
+            },
+            method:"post",
+            url: `/user/upload?userid+${inputs.userid}`,
+            // url: 'https://i6c110.p.ssafy.io:8110/user/upload?userid=12',
+            data: formData,
+        })
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        // setThumbnailSpinner(false)
+        // console.log(e.target.files[0])
+        console.log(formData)
+
         // console.log(e)
     }
     // 지우기 클릭시

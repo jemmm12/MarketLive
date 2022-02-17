@@ -1,6 +1,5 @@
-import { useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { Button } from "react-bootstrap";
 import $ from 'jquery'
@@ -9,6 +8,13 @@ import { WebRtcPeer } from 'kurento-utils';
 
 
 function Broad() {
+  const { broadid, viewerid, mynickname } = useParams();
+  const navigate = useNavigate();
+  const [broadNickname, setBroadNickname] = useState('')
+  const [broadTitle, setBroadTitle] = useState('')
+  
+
+  
 
   //채팅 메시지 보내기
   const [chatting, setChatting] = useState("");
@@ -21,13 +27,13 @@ function Broad() {
 
   const onKeyPress = (e) => {
     if (e.key === "Enter" && chatting !== "") {
-      sendMessage(chatting);
+      sendMessage_(chatting);
       e.target.value = "";
       setChatting("");
     }
   };
 
-  const sendMessage = (message) => {
+  const sendMessage_ = (message) => {
     setMessages(messages.concat(message));
   };
 
@@ -40,10 +46,29 @@ function Broad() {
 
 
   //
-  const navigate = useNavigate();
-  const { nickname } = useParams();
+ 
 
-  const [myNickname, setMyNickname] = useState("");
+
+  // const info = async () => {
+  //   await axios({
+  //     method: "get",
+  //     url: "/user/mypage/",
+  //     headers: { Authorization: localStorage.getItem("jwt") },
+  //   })
+  //     .then((res) => {
+  //       console.log(res);
+  //       setMyNickname(res.data.nickname);
+  //       // var nickname_ = res.data.nickname
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       // 토큰 만료되면 로그아웃
+  //       localStorage.removeItem("jwt");
+  //       navigate("/login");
+  //     });
+    // await console.log(this.nickname_)
+  // }
+  // info()
 
   useEffect(() => {
     axios({
@@ -52,8 +77,12 @@ function Broad() {
       headers: { Authorization: localStorage.getItem("jwt") },
     })
       .then((res) => {
-        console.log(res);
-        setMyNickname(res.data.nickname);
+        // console.log(res);
+        // 임의로 방,닉네임 만들어서 들어가면 홈으로 이동
+        if (String(res.data.userid) !== String(viewerid) || res.data.nickname !== mynickname){
+          navigate("/")
+          console.log(res.data.userid,viewerid,res.data.nickname,mynickname)
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -61,6 +90,21 @@ function Broad() {
         localStorage.removeItem("jwt");
         navigate("/login");
       });
+
+    // 방정보 없으면 홈으로 이동
+    axios({
+      method: 'get',
+      url: '/room/one/'+broadid
+    })
+    .then(res => {
+      console.log(res)
+      setBroadNickname(res.data.nickname)
+      setBroadTitle(res.data.title)
+    })
+    .catch(err => {
+      console.log(err)
+      navigate("/")
+    })
   }, []);
 
   // 방송
@@ -108,35 +152,49 @@ function Broad() {
   //     .catch(handleLocalMediaStreamError);
 
   const onProfile = () => {
-    window.open("/profile/" + nickname, "_blank");
+    window.open("/profile/" + broadNickname, "_blank");
   };
 
 
   // webRTC
 
+
   useEffect(() => {
+    // info()
+    // console.log(broadid, viewerid, mynickname, '--------')
+
+    // setTimeout(function () {
     var myurl = 'i6c110.p.ssafy.io:8113'
     var ws = new WebSocket('wss://' + myurl + '/i6c110');
     // var ws = new WebSocket('https://i6c110.p.ssafy.io:8443/i6c110')
-    var video;
+    var video = document.getElementById('video');
     var webRtcPeer;
     // var broad_id;	// 테스트용 broadcaster id
     // var viewer_id;
-    var broad_id = 724212
-    var viewer_id = 724212
-    var nickname = 'asddf'
+    var broad_id = broadid
+    var viewer_id = viewerid
+    var nickname = mynickname
+    // console.log(myNickname)
 
-    console.log('-----')
-    presenter()
-    // viewer()
+    // console.log('-----')
+    if (broadid === viewerid){
+      ws.onopen = () => presenter()
+    } else {
+      ws.onopen = () => viewer()
+    }
+    
+    
+    
+    // video = video_
 
-    window.onload = function () {
+    // window.onload = function () {
         // console = new Console();
-        video = document.getElementById('video');
+        // video = document.getElementById('video');
+        // video = video_
         // disableStopButton();
         // enableButton('#sendBroadId', 'broadId()');
         // enableButton('#sendViewerId', 'viewerId()');
-    }
+    // }
 
     // function broadId() {
     //     broad_id = document.getElementById('broadId').value;
@@ -216,6 +274,7 @@ function Broad() {
     }
 
     function presenter() {
+        // console.log(video)
         if (!webRtcPeer) {
             // showSpinner(video);
 
@@ -339,15 +398,16 @@ function Broad() {
 
     // function showSpinner() {
     //     for (var i = 0; i < arguments.length; i++) {
-    //         arguments[i].poster = './img/transparent-1px.png';
-    //         arguments[i].style.background = 'center transparent url("./img/spinner.gif") no-repeat';
+    //         // arguments[i].poster = './img/transparent-1px.png';
+    //         arguments[i].poster = '../../img/webrtc.png';
+    //         arguments[i].style.background = 'center transparent url("../../img/spinner.gif") no-repeat';
     //     }
     // }
 
     // function hideSpinner() {
     //     for (var i = 0; i < arguments.length; i++) {
     //         arguments[i].src = '';
-    //         arguments[i].poster = './img/webrtc.png';
+    //         arguments[i].poster = '../../img/webrtc.png';
     //         arguments[i].style.background = '';
     //     }
     // }
@@ -359,9 +419,10 @@ function Broad() {
     //     event.preventDefault();
     //     $(this).ekkoLightbox();
     // });
-
-
+  // }, 1000)
+  
   },[])
+  // }
   
 
 
@@ -375,7 +436,10 @@ function Broad() {
         <div className="w-100 p-0">
           {/* 비디오 */}
           <div id="videoBig">
-				  	<video id="video" autoPlay width="640px" height="480px"></video>
+				  	<video id="video" autoPlay 
+              // width="640px" height="480px"
+              className="w-100"
+            ></video>
 				  </div>
           {/* <video
             id="video"
@@ -390,23 +454,23 @@ function Broad() {
           <div className="d-flex mb-2">
             {/* 이미지, 방송제목, 닉네임 */}
             <img
-              src="../img/user.png"
+              src="https://i6c110.p.ssafy.io/img/user.png"
               alt=""
               style={{ width: "50px", height: "50px", cursor: "pointer" }}
               className="ms-1"
               onClick={onProfile}
             />
             <div className="ms-1">
-              <div className="fw-bold">방송 제목</div>
+              <div className="fw-bold">{broadTitle}</div>
               <div>
                 <span onClick={onProfile} style={{ cursor: "pointer" }}>
-                  {nickname}
+                  {broadNickname}
                 </span>
               </div>
             </div>
 
             {/* 판매자일 경우 보이는 버튼 */}
-            {nickname === myNickname ? (
+            {broadid === viewerid ? (
               <div className="ms-auto me-1">
                 <Button
                   // onClick={startVideo}

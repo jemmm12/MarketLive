@@ -39,7 +39,7 @@ function App() {
           <Route path="/messageread/:dm_id" element={<MessageRead />} />
           <Route path="/profile/:nickname" element={<Profile />} />
           <Route path="/makebroad" element={<BroadMake />} />
-          <Route path="/watch/:nickname" element={<Broad />} />
+          <Route path="/watch/:broadid/:viewerid/:mynickname" element={<Broad />} />
           {/* <Route path="/watch/:nickname" element={<BroadTest />} /> */}
         </Routes>
       </BrowserRouter>

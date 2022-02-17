@@ -9,16 +9,21 @@ function Home() {
   const navigate = useNavigate();
 
   const [broads, setBroads] = useState('')
+  const [myNickname, setMyNickname] = useState('')
+  const [myId, setMyId] = useState('')
 
   useEffect(() => {
     if (localStorage.jwt) {
       axios({
         method: "get",
-        url: "/auth/falsify/",
+        // url: "/auth/falsify/",
+        url: '/user/mypage/',
         headers: { Authorization: localStorage.getItem("jwt") },
       })
         .then((res) => {
           console.log(res);
+          setMyNickname(res.data.nickname)
+          setMyId(res.data.userid)
         })
         .catch((err) => {
           console.log(err);
@@ -46,9 +51,9 @@ function Home() {
   };
 
   const onBroad = (e) => {
-    // console.log(e)
+    console.log(e)
     if (localStorage.getItem("jwt")){
-      navigate("/watch/" + e)
+      navigate(`/watch/${e.userid}/${myId}/${myNickname}`)
     } else {
       alert('로그인이 필요합니다.')
       navigate('/login')
@@ -116,7 +121,7 @@ function Home() {
                       src={broad.thumbnail}
                       alt=""
                       style={{ height: "100%", width: "100%", cursor: "pointer" }}
-                      onClick={()=>{onBroad(broad.nickname)}}
+                      onClick={()=>{onBroad(broad)}}
                     />
                   ) : (
                     // <div  style={{ width: "100%"}}>
@@ -128,7 +133,7 @@ function Home() {
                       // width="320"
                       // height="180"
                       style={{ width:"100%", cursor: "pointer"}}
-                      onClick={()=>{onBroad(broad.nickname)}}
+                      onClick={()=>{onBroad(broad)}}
                     />
                     // </div>
                   )}

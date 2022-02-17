@@ -79,7 +79,10 @@ function NavBar() {
             style={{ cursor: "pointer" }}
             className="fw-bold ms-2 ms-md-4"
           >
-            <img src="../img/logo.png" alt="" style={{ width: "120px" }} />
+            <img 
+            // src="../img/logo.png" 
+            src="https://i6c110.p.ssafy.io/img/logo.png" 
+            alt="" style={{ width: "120px" }} />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" className="me-3" />
           <Navbar.Collapse id="navbarScroll">
