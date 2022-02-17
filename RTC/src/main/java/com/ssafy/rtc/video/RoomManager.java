@@ -98,6 +98,15 @@ public class RoomManager {
                 broadCasterUserId = broadIdByBroadSid.get(session.getId());  //broadcaster id 안 가지고 오는 버그 수정
                 room = roomsBySession.get(session.getId());
             }
+            
+            // id 보내기
+            JsonObject response = new JsonObject();
+            response.addProperty(ResponseKeys.ID.toString(), "멈췄음");
+            response.addProperty("broadCasterUserId", broadCasterUserId);
+            response.addProperty("viewerUserId",viewerUserId);
+            session.sendMessage(new TextMessage(response.toString()));
+            
+            
         }catch(Throwable t) {
             handleErrorResponse(t, "find id failed", session, "stopResponse");
             return;
