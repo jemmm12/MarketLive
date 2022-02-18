@@ -77,6 +77,10 @@ function MessageWrite() {
     // 보내기 버튼 누를시
     const onSend = ()  => {
         if (checkNickname) {
+            if (title.trim() === '' || content.trim() === ''){
+                alert('제목과 내용을 입력해주세요.')
+            }
+            else{
             axios({     // 쪽지 보내기
                 method: 'post',
                 url: '/dm/create',
@@ -94,14 +98,15 @@ function MessageWrite() {
             .catch(err => {
                 console.log(err)
             })
+            }
         }
         else{
-            alert('다시 확인해주세요.')
+            alert('닉네임을 확인해주세요.')
         }
     }
 
     return(
-        <div className="d-sm-flex">
+        <div className="d-md-flex">
             <MessageSideBar></MessageSideBar>
             {/* <div className="mt-3 ms-3 border border-dark p-3">
                 <div className="mb-2">
@@ -135,7 +140,7 @@ function MessageWrite() {
                     <button onClick={onSend}>보내기</button>
                 </div>
             </div> */}
-            <Form style={{ width: '70%' }} className="mx-auto border p-2 mt-4">
+            <Form style={{ width: '90%', maxWidth:"600px" }} className="mx-auto border p-2 mt-3 mt-md-5">
                 <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                     <Form.Label>받는 사람</Form.Label>
                     <Form.Control 
@@ -170,12 +175,13 @@ function MessageWrite() {
                     />
                 </Form.Group>
                 <Button 
-                    variant="secondary"
+                    // variant="secondary"
+                    variant="outline-secondary"
                     onClick={onSend}
                     className="d-flex ms-auto"
                 >보내기</Button>
             </Form>
-            <div className="ms-auto d-none d-sm-block"></div>
+            <div className="ms-auto d-none d-md-block"></div>
         </div>
     )
 }

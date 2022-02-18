@@ -9,6 +9,10 @@ function Message() {
 
     const [myId, setMyId] = useState('')
     const [msgs, setMsgs] = useState('')
+    const date_ = new Date()
+    const today = String(date_.getFullYear()*10000+
+    +(date_.getMonth()+1)*100
+    +date_.getDate())
 
 
     // 나의 pk 저장
@@ -40,7 +44,22 @@ function Message() {
             })
             .then(res => {
                 console.log(res.data)
-                setMsgs(res.data.reverse())
+                setMsgs(res.data.reverse().map(e => {
+                    const date_ = new Date(e.dm_time)
+                    const date = String(
+                        date_.getFullYear()*100000000
+                        +(date_.getMonth()+1)*1000000
+                        +date_.getDate()*10000
+                        +date_.getHours()*100
+                        +date_.getMinutes()
+                    )
+                    if (date.slice(0,8) === today){
+                        e.dm_time = date.slice(8,10)+':'+date.slice(10,12)
+                    } else {
+                        e.dm_time = date.slice(4,6)+'/'+date.slice(6,8)
+                    }
+                    return e
+                }))
             })
             .catch(err => {
                 console.log(err)
@@ -52,17 +71,17 @@ function Message() {
     // axios에서 데이터를 받아오기 전에 key값 오류 방지
     if (msgs === ''){
         return(
-            <div className="d-sm-flex">
+            <div className="d-md-flex">
                 <MessageSideBar></MessageSideBar>
-                <Spinner animation="border" className="mt-5 mx-auto d-none d-sm-block"/>
-                <Spinner animation="border" className='d-sm-none mt-5 d-flex mx-auto' />
+                <Spinner animation="border" className="d-none d-md-block" style={{marginTop:"30vh", marginLeft:"35vw"}}/>
+                <Spinner animation="border" className='d-md-none d-flex mx-auto' style={{marginTop:"30vh"}}/>
             </div>
         )
     }
 
 
     return(
-        <div className="d-sm-flex">
+        <div className="d-md-flex">
             <MessageSideBar></MessageSideBar>
 
             {/* <table style={{border: '1px solid #444444', width: '70%'}}>
@@ -90,7 +109,7 @@ function Message() {
                 </tbody>
             </table> */}
         
-            <Table style={{ width: '70%' }} className="mx-auto mt-4">
+            <Table style={{ width: '90%', maxWidth:"600px" }} className="mx-auto mt-3 mt-md-5">
                 <thead>
                     <tr>
                     <th style={{ width: '40%' }}>제목</th>
@@ -139,12 +158,22 @@ function Message() {
                                     </Link> 
                                 )}  
                             </td>
-                            <td>{msg.dm_time}</td>
+                            <td>
+                                {msg.dm_read ?(
+                                    <div className=''>
+                                        {msg.dm_time}
+                                    </div>
+                                ) : (
+                                    <div className='fw-bold'>
+                                        {msg.dm_time}
+                                    </div>
+                                )}
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
-            <div className="ms-auto d-none d-sm-block"></div>
+            <div className="ms-auto d-none d-md-block"></div>
 
         </div>
     )

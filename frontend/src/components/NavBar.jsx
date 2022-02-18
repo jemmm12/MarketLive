@@ -44,7 +44,7 @@ function NavBar() {
     navigate("/mypage");
   };
   const onBroadMake = () => {
-    navigate("/broadmake");
+    navigate("/makebroad");
   }
 
   return (
@@ -77,32 +77,35 @@ function NavBar() {
           <Navbar.Brand
             onClick={onHome}
             style={{ cursor: "pointer" }}
-            className="fw-bold ms-4"
+            className="fw-bold ms-2 ms-md-4"
           >
-            <img src="../img/logo.png" alt="" style={{ width: "120px" }} />
+            <img 
+            // src="../img/logo.png" 
+            src="https://i6c110.p.ssafy.io/img/logo.png" 
+            alt="" style={{ width: "120px" }} />
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" className="me-3" />
           <Navbar.Collapse id="navbarScroll">
-            <Form className="d-flex ms-auto me-3">
+            <Form className="d-flex ms-auto me-3 mt-1 mt-md-0">
               <FormControl
                 type="search"
-                placeholder="Search"
-                className="me-2 mt-2 my-md-0"
+                placeholder="검색"
+                className="mt-2 my-md-0 ms-1"
                 aria-label="Search"
                 // style={{ width: '300px' }}
               />
               <Button
                 variant="outline-secondary"
-                className="mt-2 my-md-0 "
+                className="mt-2 my-md-0 py-1 px-2"
                 style={{ fontFamily: "mainFont" }}
               >
-                Search
+                 <img src="../img/search.svg" alt="" style={{ width: '20px' }}/>
               </Button>
             </Form>
             {localStorage.jwt ? (
               // 로그인 되어 있으면
               <Nav
-                className="me-2 my-2 my-md-0 fw-bold"
+                className="me-2 my-2 my-md-0 ms-2 fw-bold"
                 style={{ maxHeight: "150px" }}
                 navbarScroll
               >
@@ -114,7 +117,7 @@ function NavBar() {
             ) : (
               // 로그인 안되어 있으면
               <Nav
-                className="me-2 my-2 my-md-0 fw-bold"
+                className="me-2 my-2 my-md-0 ms-2 fw-bold"
                 style={{ maxHeight: "150px" }}
                 navbarScroll
               >

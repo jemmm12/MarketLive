@@ -42,22 +42,27 @@ function Login() {
       email: inputEmail,
       password: inputPassword,
     };
-    axios
-      .post("/user/signin", data)
-      .then((response) => {
-        const token = response.data;
-        localStorage.setItem("jwt", token);
-        // localStorage.setItem("isLogin", true);
-        SetAuth(token);
-        const decoded = jwt_decode(token);
-        console.log(decoded);
-        loginSuccess();
-        setUserInfo();
-        navigate("/");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    if (inputEmail.trim() === "" || inputPassword.trim() === "") {
+      alert("아이디 또는 비밀번호를 입력해주세요.");
+    } else {
+      axios
+        .post("/user/signin", data)
+        .then((response) => {
+          const token = response.data;
+          localStorage.setItem("jwt", token);
+          // localStorage.setItem("isLogin", true);
+          SetAuth(token);
+          const decoded = jwt_decode(token);
+          console.log(decoded);
+          loginSuccess();
+          setUserInfo();
+          navigate("/");
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+        });
+    }
   };
 
   const setUserInfo = () => {
@@ -83,10 +88,10 @@ function Login() {
 
   // 로그인 되어있으면 홈으로 이동
   useEffect(() => {
-    if(localStorage.jwt){
-      navigate("/")
+    if (localStorage.jwt) {
+      navigate("/");
     }
-  },[])
+  }, []);
 
   return (
     // <div>
@@ -107,10 +112,14 @@ function Login() {
     //   />
     //   <button onClick={onClick}>로그인</button>
     // </div>
-    <Container fluid="sm">
+    <Container fluid="sm" style={{ width: "90%", maxWidth: "500px" }}>
+      <br />
+      <br />
+      <br />
+      <br />
       <Form>
         <Form.Group as={Row} className="mt-5 justify-content-center">
-          <Col xs={10} sm={8} lg={6} xl={4}>
+          <Col>
             <Form.Control
               className="mb-1"
               type="email"
@@ -129,7 +138,9 @@ function Login() {
               onKeyPress={onKeyPress}
             ></Form.Control>
             <div className="d-grid gap-2">
-              <Button onClick={onClick} variant="secondary">로그인</Button>
+              <Button onClick={onClick} variant="secondary">
+                로그인
+              </Button>
             </div>
           </Col>
         </Form.Group>

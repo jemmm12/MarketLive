@@ -49,7 +49,7 @@ function MyPage() {
     if (inputs.email === ''){
         return(
             <div className="d-flex">
-            <Spinner animation="border" className="mt-5 mx-auto" />
+            <Spinner animation="border" className="mx-auto" style={{marginTop:"30vh"}} />
             </div>
         )
     }
@@ -79,12 +79,19 @@ function MyPage() {
                 <button>수정</button>
             </Link> */}
 
-            <div className='mx-auto mt-4' style={{width:"70%"}}>
+            <div className='mx-auto mt-4' style={{width:"90%", maxWidth:"600px"}}>
                 <div className='border-bottom border-3 border-dark'>
                     <h2 className='fw-bold ms-1'>마이페이지</h2>
                 </div>
                 <div className='mt-4 d-flex ms-1'>
-                    <img src="../img/user.png" alt="" style={{width:"80px"}}/>
+                {inputs.thumnailroot ? (
+                <img
+                    src={"/user/thumbnail/" + inputs.userid}
+                    alt=""
+                    style={{ width: "80px", height:"80px", borderRadius: "70%" }}
+                />) : (
+                <img src="../img/user.png" alt="" style={{ width: "80px" }} />
+                )}
                     <h2 className='mt-auto ms-2'> 
                         <span className='fw-bold'>{inputs.nickname}</span> 님
                     </h2>
@@ -121,14 +128,16 @@ function MyPage() {
                 <div className='d-flex' >
                     <Button 
                         className='ms-auto' 
-                        variant="secondary"
+                        // variant="secondary"
+                        variant="outline-secondary"
                         onClick={onMyPageEdit}
                     >
                         수정
                     </Button>
                     <Button 
                         className='ms-2' 
-                        variant="secondary"
+                        // variant="secondary"
+                        variant="outline-secondary"
                         onClick={onClickLogout}
                     >
                         로그아웃

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from "react-router-dom";
 import { Spinner, FormControl, Button } from 'react-bootstrap'
@@ -7,12 +7,15 @@ import { Spinner, FormControl, Button } from 'react-bootstrap'
 function MyPageEdit() {
 
     const navigate = useNavigate();
+    const imageUpload = useRef()
 
     const [num, setNum] = useState(0)
     const [originNickname, setOriginNickname] = useState('')
     const [nicknameMsg, setNicknameMsg] = useState('')
     const [nicknameMsgColor, setNicknameMsgColor] = useState({ color: "black" })
     const [checkNickname, setCheckNickname] = useState(false)
+    const [chosenImage, setChosenImage] = useState('')
+    const [thumbnailSpinner, setThumbnailSpinner] = useState(false)
 
 
     // input으로 수정값 받아오기
@@ -45,6 +48,11 @@ function MyPageEdit() {
         .then(res => { 
             console.log(res)
             setOriginNickname(res.data.nickname)    // 기존 닉네임 저장
+            if (res.data.thumnailroot === null){
+                setChosenImage('../img/user.png')
+            } else {
+                setChosenImage(res.data.thumnailroot)
+            }
             setInputs(res.data)
         })
         .catch(err => {
@@ -132,11 +140,60 @@ function MyPageEdit() {
         navigate('/mypage')
     }
 
+    // 업로드 버튼 클릭시
+    const clickImageUpload = () => {
+        imageUpload.current.click()
+    }
+    // 파일 선택시
+    const onImageChange = (e) => {
+        // setThumbnailSpinner(true)
+        const formData = new FormData()
+        formData.append('multipartFile', e.target.files[0])
+        // const response = 
+        axios({
+            Headers: {
+                'content-type': 'multipart/form-data',
+            },
+            method:"post",
+            url: `/user/upload?userid=${inputs.userid}`,
+            // url: 'https://i6c110.p.ssafy.io:8110/user/upload?userid=12',
+            data: formData,
+        })
+        .then(res => {
+            console.log(res)
+            const reader = new FileReader();
+            reader.readAsDataURL(e.target.files[0]);
+            return new Promise((resolve)=>{
+              reader.onload = () =>{
+                setChosenImage(reader.result);
+                resolve();
+              }
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        // setThumbnailSpinner(false)
+        // console.log(e.target.files[0])
+        console.log(formData)
+
+        // console.log(e)
+    }
+    // 지우기 클릭시
+    const imageCancel = () => {
+        setChosenImage('../img/user.png')
+        setInputs({...inputs,thumnailroot:""})
+    }
+
+    const addDefaultImg=e=>{
+        e.target.src = "https://i6c110.p.ssafy.io/img/user.png";
+      }
+
 
     if (inputs.email === ''){
         return(
             <div className="d-flex">
-            <Spinner animation="border" className="mt-5 mx-auto" />
+            <Spinner animation="border" className="mx-auto" style={{marginTop:"30vh"}}/>
             </div>
         )
     }
@@ -189,18 +246,62 @@ function MyPageEdit() {
             </Link> */}
 
 
-            <div className='mx-auto mt-4' style={{width:"70%"}}>
+            <div className='mx-auto mt-4' style={{width:"90%", maxWidth:"600px"}}>
                 <div className='border-bottom border-3 border-dark'>
                     <h2 className='fw-bold ms-1'>프로필 수정</h2>
                 </div>
                 <div className='mt-4 d-flex ms-1'>
-                    <img src="../img/user.png" alt="" style={{width:"80px"}}/>
-                    <h2 className='mt-auto ms-2'> 
+                    {/* {thumbnailSpinner ? (
+                        <div style={{ width:"80px", height:"80px"}}>
+                            <Spinner animation="border" className="d-flex mx-auto" style={{marginTop:"24px"}}/>
+                        </div>
+                    ) : ( */}
+                        <img 
+                            src={"/user/thumbnail/" + inputs.userid}
+                            onError={addDefaultImg}
+                            alt="" 
+                            style={{width:"80px", height:"80px", borderRadius: "70%"}}
+                        />
+                    {/* )} */}
+                    
+                    {/* <Button 
+                        variant="secondary" 
+                        size="sm"
+                        className='py-0 px-1'
+                        style={{position: "absolute", marginLeft:"63px"}}>x</Button> */}
+                    {/* 버튼 */}
+                    <div className='mt-auto'>
+                        <Button 
+                            // variant="secondary" 
+                            variant="outline-secondary"
+                            size="sm"
+                            className='ms-1'
+                            onClick={clickImageUpload}
+                        >업로드</Button>
+                        <input 
+                            type="file" 
+                            accept='image/*'
+                            ref={imageUpload}
+                            onChange={onImageChange}
+                            style={{display:"none"}}
+                        />
+                        {/* {(chosenImage !== '../img/user.png') ? (
+                            <Button 
+                                // variant="secondary" 
+                                variant="outline-secondary"
+                                size="sm"
+                                className='ms-1'
+                                onClick={imageCancel}
+                            >지우기</Button>
+                         ) : null} */}
+                        
+                    </div>
+                    {/* <h2 className='mt-auto ms-2'> 
                         <span className='fw-bold'>{originNickname}</span> 님
                     </h2>
                     <h5 className='mt-auto ms-auto me-1'>
                         매너온도 {inputs.manner}도
-                    </h5>
+                    </h5> */}
                 </div>
                 <hr />
                 <div className='ms-1'>
@@ -251,14 +352,16 @@ function MyPageEdit() {
                 <div className='d-flex' >
                     <Button 
                         className='ms-auto' 
-                        variant="secondary"
+                        // variant="secondary"
+                        variant="outline-secondary"
                         onClick={onEdit}
                     >
                         수정
                     </Button>
                     <Button
                         className='ms-2' 
-                        variant="secondary"
+                        // variant="secondary"
+                        variant="outline-secondary"
                         onClick={onExit}
                     >
                         취소
